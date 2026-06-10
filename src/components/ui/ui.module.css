@@ -1,0 +1,266 @@
+/* =============================================================
+   UI Primitives — shared styles
+   ============================================================= */
+
+/* ----- Button ----- */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-tight);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    opacity var(--transition-fast);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Variants */
+.primary {
+  background-color: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-white);
+}
+
+.primary:hover:not(:disabled) {
+  background-color: var(--color-gray-800);
+  border-color: var(--color-gray-800);
+}
+
+.primary:active:not(:disabled) {
+  background-color: var(--color-gray-900);
+  border-color: var(--color-gray-900);
+}
+
+.secondary {
+  background-color: var(--color-white);
+  border-color: var(--color-ink);
+  color: var(--color-ink);
+}
+
+.secondary:hover:not(:disabled) {
+  background-color: var(--color-gray-100);
+}
+
+.secondary:active:not(:disabled) {
+  background-color: var(--color-gray-200);
+}
+
+.ghost {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--color-text);
+}
+
+.ghost:hover:not(:disabled) {
+  background-color: var(--color-gray-100);
+}
+
+.ghost:active:not(:disabled) {
+  background-color: var(--color-gray-200);
+}
+
+/* Size modifiers */
+.sm {
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-3);
+  height: 28px;
+}
+
+.md {
+  font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-4);
+  height: 36px;
+}
+
+.lg {
+  font-size: var(--text-base);
+  padding: var(--space-3) var(--space-6);
+  height: 44px;
+}
+
+/* ----- Input ----- */
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+}
+
+.label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  line-height: var(--leading-tight);
+}
+
+.input {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  transition: border-color var(--transition-fast);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--color-text-subtle);
+}
+
+.input:hover {
+  border-color: var(--color-gray-400);
+}
+
+.input:focus {
+  border-color: var(--color-ink);
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+.input-error {
+  border-color: var(--color-gray-700);
+}
+
+/* ----- Select ----- */
+.select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+}
+
+.select {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-8) var(--space-2) var(--space-3);
+  transition: border-color var(--transition-fast);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23525252' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  cursor: pointer;
+}
+
+.select:hover {
+  border-color: var(--color-gray-400);
+}
+
+.select:focus {
+  border-color: var(--color-ink);
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+.select-error {
+  border-color: var(--color-gray-700);
+}
+
+/* ----- Error text ----- */
+.error-text {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  line-height: var(--leading-tight);
+}
+
+/* ----- Spinner ----- */
+.spinner {
+  display: inline-block;
+  animation: spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ----- Toast ----- */
+.toast {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  z-index: var(--z-toast);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-width: 280px;
+  max-width: 400px;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-lg);
+  animation: toast-in var(--transition-base) ease forwards;
+}
+
+.toast-success {
+  border-color: var(--color-gray-700);
+}
+
+.toast-error {
+  border-color: var(--color-gray-500);
+  background-color: var(--color-gray-100);
+}
+
+.toast-message {
+  flex: 1;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+}
+
+.toast-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  padding: var(--space-1);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.toast-close:hover {
+  color: var(--color-text);
+  background-color: var(--color-gray-100);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--space-6)) translateY(var(--space-2));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+}
