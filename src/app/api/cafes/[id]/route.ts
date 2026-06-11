@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import { CafePatchSchema } from '@/lib/validation/cafe'
-import { verifyTurnstile } from '@/lib/turnstile'
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -53,13 +52,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     return NextResponse.json({})
   }
 
-  const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? undefined
-  const captchaOk = await verifyTurnstile(data.turnstile_token, ip)
-  if (!captchaOk) {
-    return NextResponse.json({ error: 'captcha_failed' }, { status: 400 })
-  }
-
-  const { turnstile_token: _, honeypot: __, ...patchFields } = data
+  const { honeypot: _, ...patchFields } = data
 
   // Compute changed_fields diff
   const changedFields: Record<string, unknown> = {}

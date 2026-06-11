@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import Script from 'next/script'
 import './globals.css'
 
 const inter = Inter({
@@ -23,10 +22,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.variable}>
         {children}
-        <Script
-          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-          strategy="lazyOnload"
-        />
       </body>
     </html>
   )

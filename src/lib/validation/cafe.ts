@@ -18,17 +18,14 @@ export const CafeCreateSchema = z.object({
   seats:           z.enum(['s_0_10', 's_10_20', 's_20_30', 's_30_plus']).nullable().optional(),
   hours:           HoursSchema.nullable().optional(),
   noise:           z.enum(['quiet', 'moderate', 'lively']).nullable().optional(),
-  turnstile_token: z.string().min(1),
-  honeypot:        z.string(), // any string — route handler checks emptiness for silent bot suppression
+  honeypot: z.string(), // any string — route handler checks emptiness for silent bot suppression
 })
 
-// All data fields optional, anti-spam fields required
 export const CafePatchSchema = CafeCreateSchema
-  .omit({ turnstile_token: true, honeypot: true })
+  .omit({ honeypot: true })
   .partial()
   .extend({
-    turnstile_token: z.string().min(1),
-    honeypot:        z.string(),
+    honeypot: z.string(),
   })
 
 export type CafeCreateInput = z.infer<typeof CafeCreateSchema>

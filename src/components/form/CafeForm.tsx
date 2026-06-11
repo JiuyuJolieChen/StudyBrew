@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import type { Cafe, GeoResult, HoursJson, BoroughEnum, WifiEnum, OutletsEnum, DeskSizeEnum, SeatsEnum, NoiseEnum } from '@/types'
 import {
   BOROUGH_LABELS,
@@ -15,7 +15,6 @@ import Button from '@/components/ui/Button'
 import Toast from '@/components/ui/Toast'
 import AddressSearch from './AddressSearch'
 import HoursPicker from './HoursPicker'
-import TurnstileWidget from './TurnstileWidget'
 import styles from './CafeForm.module.css'
 
 interface CafeFormProps {
@@ -45,10 +44,8 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
     hours:        (initialData?.hours ?? null) as HoursJson,
     honeypot:     '',
   })
-  const [token, setToken]           = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [toast, setToast]           = useState<{ message: string; type: 'success' | 'error' } | null>(null)
-  const widgetResetRef               = useRef<(() => void) | null>(null)
 
   function set<K extends keyof typeof form>(key: K, value: typeof form[K]) {
     setForm(f => ({ ...f, [key]: value }))
@@ -67,7 +64,6 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!token) { setToast({ message: 'Please complete the CAPTCHA.', type: 'error' }); return }
     if (!form.borough || !form.wifi || !form.outlets || !form.desk_size) {
       setToast({ message: 'Please fill in all required fields.', type: 'error' }); return
     }
@@ -78,7 +74,6 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
       neighborhood: form.neighborhood || null,
       seats:        form.seats || null,
       noise:        form.noise || null,
-      turnstile_token: token,
     }
 
     const url    = editId ? `/api/cafes/${editId}` : '/api/cafes'
@@ -93,12 +88,8 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
       const data = await r.json()
       if (!r.ok) throw new Error(data.error ?? 'Something went wrong.')
       setToast({ message: editId ? 'Café updated!' : 'Café added! Thank you.', type: 'success' })
-      widgetResetRef.current?.()
-      setToken('')
     } catch (err) {
       setToast({ message: err instanceof Error ? err.message : 'Submission failed.', type: 'error' })
-      widgetResetRef.current?.()
-      setToken('')
     } finally {
       setSubmitting(false)
     }
@@ -216,10 +207,6 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
 
         {/* Submit */}
         <div className={styles.submitRow}>
-          <TurnstileWidget
-            onVerify={setToken}
-            onExpire={() => setToken('')}
-          />
           <div className={styles.actions}>
             <Button type="submit" loading={submitting}>
               {editId ? 'Save changes' : 'Add café'}

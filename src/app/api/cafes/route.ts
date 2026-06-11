@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import { CafeCreateSchema } from '@/lib/validation/cafe'
-import { verifyTurnstile } from '@/lib/turnstile'
 import type { BoroughEnum, WifiEnum } from '@/types'
 
 export async function GET(request: NextRequest) {
@@ -37,13 +36,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({})
   }
 
-  const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? undefined
-  const captchaOk = await verifyTurnstile(data.turnstile_token, ip)
-  if (!captchaOk) {
-    return NextResponse.json({ error: 'captcha_failed' }, { status: 400 })
-  }
-
-  const { turnstile_token: _, honeypot: __, ...insertPayload } = data
+  const { honeypot: _, ...insertPayload } = data
 
   const db = getSupabaseServer()
   const { data: newCafe, error: insertError } = await db
