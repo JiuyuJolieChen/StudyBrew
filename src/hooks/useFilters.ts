@@ -31,5 +31,5 @@ export function useFilters(allCafes: Cafe[]) {
     setFilters(INITIAL)
   }
 
-  return { filters, filteredCafes, toggleFilter, resetFilters }
+  return { filters, setFilters, filteredCafes, toggleFilter, resetFilters }
 }

@@ -1,0 +1,111 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.header {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+  background: var(--color-bg);
+  z-index: var(--z-filter);
+}
+
+.logo {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-ink);
+}
+
+.filterBar {
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+  z-index: var(--z-filter);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.listPanel {
+  width: var(--panel-width);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.listCount {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.listScroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.mapPanel {
+  flex: 1;
+  position: relative;
+  min-width: 0;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  height: 100%;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* Mobile toggle button — fixed above map */
+.mobileToggle {
+  display: none;
+  position: fixed;
+  bottom: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-panel);
+  box-shadow: var(--shadow-lg);
+}
+
+@media (max-width: 768px) {
+  .listPanel {
+    display: none;
+  }
+
+  .listPanel.mobileListVisible {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 60vh;
+    z-index: var(--z-panel);
+    background: var(--color-bg);
+    border-top: 1px solid var(--color-border);
+    border-right: none;
+  }
+
+  .mobileToggle {
+    display: block;
+  }
+}

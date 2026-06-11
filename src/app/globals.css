@@ -99,6 +99,10 @@
   --filter-height: 56px;
   --header-height: 56px;
 
+  /* Border widths */
+  --border-thin:   1px;
+  --border-medium: 2px;
+
   /* Transitions */
   --transition-fast: 120ms ease;
   --transition-base: 200ms ease;
