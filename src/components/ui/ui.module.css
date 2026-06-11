@@ -264,3 +264,33 @@
     transform: translateX(0) translateY(0);
   }
 }
+
+@media (max-width: 768px) {
+  /* Buttons: ensure 44px touch targets on mobile */
+  .sm {
+    height: auto;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
+  }
+
+  .md {
+    height: auto;
+    min-height: 44px;
+  }
+
+  /* Inputs/selects: 16px prevents iOS Safari auto-zoom */
+  .input,
+  .select {
+    font-size: var(--text-base);
+    min-height: 44px;
+  }
+
+  /* Toast: full-width on small screens */
+  .toast {
+    left: var(--space-4);
+    right: var(--space-4);
+    bottom: var(--space-4);
+    min-width: unset;
+    max-width: unset;
+  }
+}

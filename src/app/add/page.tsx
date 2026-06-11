@@ -1,0 +1,34 @@
+import { getSupabaseServer } from '@/lib/supabase/server'
+import CafeForm from '@/components/form/CafeForm'
+import type { Cafe } from '@/types'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = { title: 'Add a Café — StudyBrew NYC' }
+
+interface Props {
+  searchParams: { edit?: string }
+}
+
+export default async function AddPage({ searchParams }: Props) {
+  let initialData: Cafe | undefined
+
+  if (searchParams.edit) {
+    const db = getSupabaseServer()
+    const { data } = await db
+      .from('cafes')
+      .select('*')
+      .eq('id', searchParams.edit)
+      .eq('is_deleted', false)
+      .single()
+    initialData = (data as Cafe) ?? undefined
+  }
+
+  return (
+    <main style={{ maxWidth: 680, margin: '0 auto', padding: 'var(--space-8) var(--space-4)' }}>
+      <h1 style={{ fontSize: 'var(--text-3xl)', fontWeight: 'var(--weight-bold)', marginBottom: 'var(--space-8)' }}>
+        {searchParams.edit ? 'Edit café' : 'Add a café'}
+      </h1>
+      <CafeForm initialData={initialData} editId={searchParams.edit} />
+    </main>
+  )
+}
