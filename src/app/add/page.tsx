@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import CafeForm from '@/components/form/CafeForm'
 import type { Cafe } from '@/types'
@@ -25,6 +26,19 @@ export default async function AddPage({ searchParams }: Props) {
 
   return (
     <main style={{ maxWidth: 680, margin: '0 auto', padding: 'var(--space-8) var(--space-4)' }}>
+      <Link
+        href="/"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 'var(--space-1)',
+          fontSize: 'var(--text-sm)',
+          color: 'var(--color-text-muted)',
+          marginBottom: 'var(--space-6)',
+        }}
+      >
+        ← Back to map
+      </Link>
       <h1 style={{ fontSize: 'var(--text-3xl)', fontWeight: 'var(--weight-bold)', marginBottom: 'var(--space-8)' }}>
         {searchParams.edit ? 'Edit café' : 'Add a café'}
       </h1>

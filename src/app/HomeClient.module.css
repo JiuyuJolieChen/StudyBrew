@@ -43,6 +43,12 @@
   flex-direction: column;
   border-right: 1px solid var(--color-border);
   overflow: hidden;
+  transition: width var(--transition-slow), border-color var(--transition-slow);
+}
+
+.collapsed {
+  width: 0;
+  border-right-color: transparent;
 }
 
 .listCount {
@@ -75,6 +81,35 @@
   font-size: var(--text-sm);
 }
 
+/* Drawer toggle — sits on left edge of map panel, desktop only */
+.drawerToggle {
+  position: absolute;
+  top: 50%;
+  left: var(--space-2);
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 48px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  transition:
+    box-shadow var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.drawerToggle:hover {
+  box-shadow: var(--shadow-lg);
+  color: var(--color-text);
+}
+
 /* Mobile toggle button — fixed above map */
 .mobileToggle {
   display: none;
@@ -87,6 +122,10 @@
 }
 
 @media (max-width: 768px) {
+  .drawerToggle {
+    display: none;
+  }
+
   .listPanel {
     display: none;
   }

@@ -1,8 +1,15 @@
 'use client'
 
-import { FilterState, BoroughEnum, WifiEnum, NoiseEnum } from '@/types'
-import { BOROUGH_LABELS, WIFI_LABELS, NOISE_LABELS } from '@/lib/constants'
-import FilterChip from './FilterChip'
+import { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
+import type { FilterState, BoroughEnum, WifiEnum, OutletsEnum, DeskSizeEnum, NoiseEnum } from '@/types'
+import {
+  BOROUGH_LABELS,
+  WIFI_LABELS,
+  OUTLETS_LABELS,
+  DESK_SIZE_LABELS,
+  NOISE_LABELS,
+} from '@/lib/constants'
 import styles from './FilterBar.module.css'
 
 interface FilterBarProps {
@@ -10,71 +17,136 @@ interface FilterBarProps {
   onChange: (next: FilterState) => void
 }
 
-const BOROUGH_OPTIONS: { value: BoroughEnum; label: string }[] = [
-  { value: 'manhattan', label: BOROUGH_LABELS.manhattan },
-  { value: 'brooklyn', label: BOROUGH_LABELS.brooklyn },
-  { value: 'queens', label: BOROUGH_LABELS.queens },
-  { value: 'bronx', label: BOROUGH_LABELS.bronx },
-  { value: 'staten_island', label: BOROUGH_LABELS.staten_island },
-]
+function FilterDropdown<T extends string>({
+  label,
+  options,
+  selected,
+  onToggle,
+}: {
+  label: string
+  options: { value: T; label: string }[]
+  selected: T[]
+  onToggle: (value: T) => void
+}) {
+  const [open, setOpen]         = useState(false)
+  const [mounted, setMounted]   = useState(false)
+  const [panelPos, setPanelPos] = useState({ top: 0, left: 0 })
+  const triggerRef              = useRef<HTMLButtonElement>(null)
+  const panelRef                = useRef<HTMLDivElement>(null)
 
-const WIFI_OPTIONS: { value: WifiEnum; label: string }[] = [
-  { value: 'free', label: WIFI_LABELS.free },
-  { value: 'none', label: WIFI_LABELS.none },
-  { value: 'paid_or_login', label: WIFI_LABELS.paid_or_login },
-]
+  useEffect(() => { setMounted(true) }, [])
 
-const NOISE_OPTIONS: { value: NoiseEnum; label: string }[] = [
-  { value: 'quiet', label: NOISE_LABELS.quiet },
-  { value: 'moderate', label: NOISE_LABELS.moderate },
-  { value: 'lively', label: NOISE_LABELS.lively },
-]
+  function openDropdown() {
+    if (triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect()
+      setPanelPos({ top: rect.bottom + 4, left: rect.left })
+    }
+    setOpen(true)
+  }
+
+  useEffect(() => {
+    if (!open) return
+    function onOutsideClick(e: MouseEvent) {
+      const target = e.target as Node
+      if (
+        panelRef.current && !panelRef.current.contains(target) &&
+        triggerRef.current && !triggerRef.current.contains(target)
+      ) {
+        setOpen(false)
+      }
+    }
+    function onEscape(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('mousedown', onOutsideClick)
+    document.addEventListener('keydown', onEscape)
+    return () => {
+      document.removeEventListener('mousedown', onOutsideClick)
+      document.removeEventListener('keydown', onEscape)
+    }
+  }, [open])
+
+  const count = selected.length
+
+  return (
+    <div className={styles.dropdown}>
+      <button
+        ref={triggerRef}
+        type="button"
+        className={`${styles.trigger} ${count > 0 ? styles.triggerActive : ''}`}
+        onClick={open ? () => setOpen(false) : openDropdown}
+        aria-expanded={open}
+        aria-haspopup="true"
+      >
+        {label}
+        {count > 0 && <span className={styles.badge}>{count}</span>}
+        <span className={styles.chevron} aria-hidden="true">{open ? '▴' : '▾'}</span>
+      </button>
+
+      {mounted && open && createPortal(
+        <div
+          ref={panelRef}
+          className={styles.panel}
+          style={{ position: 'fixed', top: panelPos.top, left: panelPos.left, zIndex: 9999 }}
+        >
+          {options.map(opt => (
+            <label key={opt.value} className={styles.option}>
+              <input
+                type="checkbox"
+                checked={selected.includes(opt.value)}
+                onChange={() => onToggle(opt.value)}
+              />
+              <span>{opt.label}</span>
+            </label>
+          ))}
+        </div>,
+        document.body
+      )}
+    </div>
+  )
+}
 
 export default function FilterBar({ filters, onChange }: FilterBarProps) {
-  function toggleBorough(value: BoroughEnum) {
-    onChange({ ...filters, borough: filters.borough === value ? null : value })
-  }
-
-  function toggleWifi(value: WifiEnum) {
-    onChange({ ...filters, wifi: filters.wifi === value ? null : value })
-  }
-
-  function toggleNoise(value: NoiseEnum) {
-    onChange({ ...filters, noise: filters.noise === value ? null : value })
+  function toggle<K extends keyof FilterState>(key: K, value: string) {
+    const current = filters[key] as string[]
+    const next = current.includes(value)
+      ? current.filter(v => v !== value)
+      : [...current, value]
+    onChange({ ...filters, [key]: next as FilterState[K] })
   }
 
   return (
     <nav className={styles.bar} aria-label="Filter cafes">
-      {BOROUGH_OPTIONS.map((opt) => (
-        <FilterChip
-          key={opt.value}
-          label={opt.label}
-          active={filters.borough === opt.value}
-          onClick={() => toggleBorough(opt.value)}
-        />
-      ))}
-
-      <span className={styles.divider} aria-hidden="true" />
-
-      {WIFI_OPTIONS.map((opt) => (
-        <FilterChip
-          key={opt.value}
-          label={opt.label}
-          active={filters.wifi === opt.value}
-          onClick={() => toggleWifi(opt.value)}
-        />
-      ))}
-
-      <span className={styles.divider} aria-hidden="true" />
-
-      {NOISE_OPTIONS.map((opt) => (
-        <FilterChip
-          key={opt.value}
-          label={opt.label}
-          active={filters.noise === opt.value}
-          onClick={() => toggleNoise(opt.value)}
-        />
-      ))}
+      <FilterDropdown<BoroughEnum>
+        label="Borough"
+        options={Object.entries(BOROUGH_LABELS).map(([v, l]) => ({ value: v as BoroughEnum, label: l }))}
+        selected={filters.borough}
+        onToggle={v => toggle('borough', v)}
+      />
+      <FilterDropdown<WifiEnum>
+        label="WiFi"
+        options={Object.entries(WIFI_LABELS).map(([v, l]) => ({ value: v as WifiEnum, label: l }))}
+        selected={filters.wifi}
+        onToggle={v => toggle('wifi', v)}
+      />
+      <FilterDropdown<OutletsEnum>
+        label="Outlets"
+        options={Object.entries(OUTLETS_LABELS).map(([v, l]) => ({ value: v as OutletsEnum, label: l }))}
+        selected={filters.outlets}
+        onToggle={v => toggle('outlets', v)}
+      />
+      <FilterDropdown<DeskSizeEnum>
+        label="Desk size"
+        options={Object.entries(DESK_SIZE_LABELS).map(([v, l]) => ({ value: v as DeskSizeEnum, label: l }))}
+        selected={filters.desk_size}
+        onToggle={v => toggle('desk_size', v)}
+      />
+      <FilterDropdown<NoiseEnum>
+        label="Noise"
+        options={Object.entries(NOISE_LABELS).map(([v, l]) => ({ value: v as NoiseEnum, label: l }))}
+        selected={filters.noise}
+        onToggle={v => toggle('noise', v)}
+      />
     </nav>
   )
 }

@@ -35,15 +35,16 @@ export interface CafeEdit {
 }
 
 export interface FilterState {
-  borough: BoroughEnum | null
-  wifi: WifiEnum | null
-  outlets: OutletsEnum | null
-  noise: NoiseEnum | null
-  desk_size: DeskSizeEnum | null
+  borough:   BoroughEnum[]
+  wifi:      WifiEnum[]
+  outlets:   OutletsEnum[]
+  noise:     NoiseEnum[]
+  desk_size: DeskSizeEnum[]
 }
 
 export interface GeoResult {
   display_name: string
+  name: string | null
   lat: number
   lng: number
   borough: BoroughEnum | null

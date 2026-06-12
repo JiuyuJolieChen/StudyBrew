@@ -2,27 +2,23 @@ import { useState, useMemo } from 'react'
 import type { Cafe, FilterState } from '@/types'
 
 const INITIAL: FilterState = {
-  borough:   null,
-  wifi:      null,
-  outlets:   null,
-  noise:     null,
-  desk_size: null,
+  borough:   [],
+  wifi:      [],
+  outlets:   [],
+  noise:     [],
+  desk_size: [],
 }
 
 export function useFilters(allCafes: Cafe[]) {
   const [filters, setFilters] = useState<FilterState>(INITIAL)
 
-  function toggleFilter<K extends keyof FilterState>(key: K, value: FilterState[K]) {
-    setFilters(prev => ({ ...prev, [key]: prev[key] === value ? null : value }))
-  }
-
   const filteredCafes = useMemo(() => {
     return allCafes.filter(cafe => {
-      if (filters.borough   && cafe.borough    !== filters.borough)   return false
-      if (filters.wifi      && cafe.wifi       !== filters.wifi)      return false
-      if (filters.outlets   && cafe.outlets    !== filters.outlets)   return false
-      if (filters.noise     && cafe.noise      !== filters.noise)     return false
-      if (filters.desk_size && cafe.desk_size  !== filters.desk_size) return false
+      if (filters.borough.length   && !filters.borough.includes(cafe.borough))     return false
+      if (filters.wifi.length      && !filters.wifi.includes(cafe.wifi))            return false
+      if (filters.outlets.length   && !filters.outlets.includes(cafe.outlets))      return false
+      if (filters.desk_size.length && !filters.desk_size.includes(cafe.desk_size))  return false
+      if (filters.noise.length     && (!cafe.noise || !filters.noise.includes(cafe.noise))) return false
       return true
     })
   }, [allCafes, filters])
@@ -31,5 +27,5 @@ export function useFilters(allCafes: Cafe[]) {
     setFilters(INITIAL)
   }
 
-  return { filters, setFilters, filteredCafes, toggleFilter, resetFilters }
+  return { filters, setFilters, filteredCafes, resetFilters }
 }

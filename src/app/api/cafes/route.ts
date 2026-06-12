@@ -39,6 +39,26 @@ export async function POST(request: NextRequest) {
   const { honeypot: _, ...insertPayload } = data
 
   const db = getSupabaseServer()
+
+  // Duplicate check — reject if an active café already exists within ~10 metres
+  const TOLERANCE = 0.0001 // ~11 metres in decimal degrees
+  const { data: existing } = await db
+    .from('cafes')
+    .select('id, name')
+    .eq('is_deleted', false)
+    .gte('lat', insertPayload.lat - TOLERANCE)
+    .lte('lat', insertPayload.lat + TOLERANCE)
+    .gte('lng', insertPayload.lng - TOLERANCE)
+    .lte('lng', insertPayload.lng + TOLERANCE)
+    .limit(1)
+
+  if (existing && existing.length > 0) {
+    return NextResponse.json(
+      { error: `"${existing[0].name}" is already listed at this location.` },
+      { status: 409 },
+    )
+  }
+
   const { data: newCafe, error: insertError } = await db
     .from('cafes')
     .insert(insertPayload)

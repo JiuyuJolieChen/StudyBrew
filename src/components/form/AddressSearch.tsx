@@ -32,7 +32,7 @@ export default function AddressSearch({ onSelect, defaultValue }: Props) {
   }, [setResults])
 
   function handleSelect(result: GeoResult) {
-    setQuery(result.display_name.slice(0, 60))
+    setQuery(result.display_name)
     setResults([])
     onSelect(result)
   }

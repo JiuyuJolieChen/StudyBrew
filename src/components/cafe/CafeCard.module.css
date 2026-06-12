@@ -54,6 +54,46 @@
   text-overflow: ellipsis;
 }
 
+/* Shared style for clickable-copy address (card + detail) */
+.copy-address {
+  display: block;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: color var(--transition-fast);
+}
+
+.copy-address:hover {
+  color: var(--color-text);
+}
+
+.card-footer {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.view-details {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+  transition: color var(--transition-fast);
+}
+
+.view-details:hover {
+  color: var(--color-text);
+}
+
 .borough-badge {
   flex-shrink: 0;
   font-size: var(--text-xs);

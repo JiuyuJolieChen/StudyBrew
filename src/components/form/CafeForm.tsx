@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import type { Cafe, GeoResult, HoursJson, BoroughEnum, WifiEnum, OutletsEnum, DeskSizeEnum, SeatsEnum, NoiseEnum } from '@/types'
 import {
   BOROUGH_LABELS,
@@ -29,6 +30,7 @@ function toOptions<T extends string>(labels: Record<T, string>, placeholder?: st
 }
 
 export default function CafeForm({ initialData, editId }: CafeFormProps) {
+  const router = useRouter()
   const [form, setForm] = useState({
     name:         initialData?.name ?? '',
     address:      initialData?.address ?? '',
@@ -59,11 +61,16 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
       lng:          result.lng,
       borough:      result.borough ?? f.borough,
       neighborhood: result.neighborhood ?? f.neighborhood,
+      // Auto-fill name only when the field is still empty
+      name:         f.name.trim() === '' && result.name ? result.name : f.name,
     }))
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (form.lat === 0 || form.lng === 0) {
+      setToast({ message: 'Please select an address from the dropdown to pin the location.', type: 'error' }); return
+    }
     if (!form.borough || !form.wifi || !form.outlets || !form.desk_size) {
       setToast({ message: 'Please fill in all required fields.', type: 'error' }); return
     }
@@ -86,8 +93,14 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
         body: JSON.stringify(payload),
       })
       const data = await r.json()
-      if (!r.ok) throw new Error(data.error ?? 'Something went wrong.')
+      if (!r.ok) {
+        const msg = data.issues
+          ? data.issues.map((i: { message: string }) => i.message).join('; ')
+          : (data.error ?? 'Something went wrong.')
+        throw new Error(msg)
+      }
       setToast({ message: editId ? 'Café updated!' : 'Café added! Thank you.', type: 'success' })
+      setTimeout(() => router.push('/'), 1500)
     } catch (err) {
       setToast({ message: err instanceof Error ? err.message : 'Submission failed.', type: 'error' })
     } finally {
@@ -112,12 +125,16 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
 
           <div>
             <label style={{ display: 'block', fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-medium)', marginBottom: 'var(--space-1)' }}>
-              Search address
+              Search address *
             </label>
             <AddressSearch
               onSelect={handleAddressSelect}
               defaultValue={initialData?.address}
             />
+            {form.lat !== 0
+              ? <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginTop: 'var(--space-1)' }}>✓ Location pinned</p>
+              : <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginTop: 'var(--space-1)' }}>Type an address and select a result from the dropdown</p>
+            }
           </div>
 
           <Select

@@ -25,8 +25,9 @@ export async function GET(request: NextRequest) {
   if (!res.ok) return NextResponse.json([], { status: 200 })
 
   const raw = await res.json()
-  const results: GeoResult[] = raw.map((r: { display_name: string; lat: string; lon: string; address: Record<string, string> }) => ({
+  const results: GeoResult[] = raw.map((r: { display_name: string; name?: string; lat: string; lon: string; address: Record<string, string> }) => ({
     display_name: r.display_name,
+    name:         r.name ?? null,
     lat:          parseFloat(r.lat),
     lng:          parseFloat(r.lon),
     borough:      inferBorough(r.address),

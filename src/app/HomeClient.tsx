@@ -16,7 +16,8 @@ interface HomeClientProps {
 
 export default function HomeClient({ initialCafes }: HomeClientProps) {
   const { filters, setFilters, filteredCafes, resetFilters } = useFilters(initialCafes)
-  const [mobileView, setMobileView] = useState<'map' | 'list'>('map')
+  const [mobileView, setMobileView]       = useState<'map' | 'list'>('map')
+  const [listCollapsed, setListCollapsed] = useState(false)
 
   function handleFilterChange(next: FilterState) {
     setFilters(next)
@@ -29,6 +30,7 @@ export default function HomeClient({ initialCafes }: HomeClientProps) {
   const cafeCount = filteredCafes.length
   const listPanelClass = [
     styles.listPanel,
+    listCollapsed ? styles.collapsed : '',
     mobileView === 'list' ? styles.mobileListVisible : '',
   ]
     .filter(Boolean)
@@ -85,6 +87,13 @@ export default function HomeClient({ initialCafes }: HomeClientProps) {
           <MapContainer
             cafes={filteredCafes}
           />
+          <button
+            className={styles.drawerToggle}
+            onClick={() => setListCollapsed(c => !c)}
+            aria-label={listCollapsed ? 'Show list' : 'Hide list'}
+          >
+            {listCollapsed ? '›' : '‹'}
+          </button>
         </div>
       </div>
 

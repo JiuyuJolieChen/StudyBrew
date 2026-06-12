@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Wifi, Zap, Monitor, Users, Volume2 } from 'lucide-react'
 import { Cafe } from '@/types'
+import CopyAddress from './CopyAddress'
 import {
   BOROUGH_LABELS,
   WIFI_LABELS,
@@ -23,7 +24,7 @@ export default function CafeDetail({ cafe }: CafeDetailProps) {
       {/* Header section */}
       <div className={styles['detail-section']}>
         <h1 className={styles['detail-title']}>{cafe.name}</h1>
-        <p className={styles['detail-address']}>{cafe.address}</p>
+        <CopyAddress address={cafe.address} className={styles['detail-address']} />
         <p className={styles['detail-neighborhood']}>
           {BOROUGH_LABELS[cafe.borough]}
           {cafe.neighborhood ? ` · ${cafe.neighborhood}` : ''}
