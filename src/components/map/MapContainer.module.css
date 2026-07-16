@@ -2,6 +2,21 @@
   width: 100%;
   height: 100%;
   position: relative;
+
+  /* Watercolor palette — scoped to the map subtree only */
+  --map-paper:        #f6f0e2;
+  --map-paper-edge:   #eee0c4;
+  --map-water-light:  #cfe4e6;
+  --map-water-deep:   #a9cdd0;
+  --map-park:         #cfe3c9;
+  --map-park-deep:    #a3c896;
+  --map-road:         #f9f5ea;
+  --map-ink:          #3c3a34;
+  --map-label:        #4a4741;
+  --map-label-soft:   #6b675e;
+  --map-accent-wifi:    #7fa66b;
+  --map-accent-outlet:  #c1704a;
+  --map-shadow: 0 4px 14px rgba(60,58,52,0.22), 0 1px 3px rgba(60,58,52,0.15);
 }
 
 .skeleton {
@@ -21,10 +36,85 @@
   height: 100%;
 }
 
+/* Base tiles — warm paper color grade only, no distortion (keeps baked-in
+   street-name text legible; wobble lives on the vector overlay instead).
+   Saturate first (while the tile's real water/park colors are still
+   distinct) so they pop instead of being muddied by sepia first. */
 .map :global(.leaflet-tile-pane) {
-  filter: grayscale(100%);
+  filter: saturate(1.6) sepia(0.12) brightness(0.97) contrast(1.08);
 }
 
 .map :global(.leaflet-container) {
   font-family: var(--font-sans);
+  background: var(--map-paper);
+}
+
+/* Real-geometry landmark overlay — differentiated per feature type,
+   only possible because these are actual SVG paths, not raster tiles.
+   `multiply` blend reads as an ink/watercolor wash sitting on the map
+   rather than a bright flat shape pasted on top. */
+.map :global(.water-feature) {
+  fill: var(--map-water-deep);
+  fill-opacity: 0.4;
+  mix-blend-mode: multiply;
+  stroke: none;
+  filter: url(#sb-water-feather);
+}
+
+.map :global(.park-feature) {
+  fill: var(--map-park-deep);
+  fill-opacity: 0.35;
+  mix-blend-mode: multiply;
+  stroke: none;
+  filter: url(#sb-park-feather);
+}
+
+.map :global(.avenue-feature) {
+  fill: none;
+  stroke: var(--map-ink);
+  stroke-width: 2.5;
+  stroke-opacity: 0.35;
+  stroke-linecap: round;
+  filter: url(#sb-avenue-wobble);
+}
+
+/* Popup chrome — override Leaflet's stock white popup box to match the
+   paper palette. Wrapper and tip both need updating together or their
+   shadows/colors mismatch. */
+.map :global(.leaflet-popup-content-wrapper) {
+  background: var(--map-paper);
+  border: 1px solid var(--map-paper-edge);
+  border-radius: 10px;
+  box-shadow: var(--map-shadow);
+}
+
+.map :global(.leaflet-popup-content) {
+  margin: 8px 10px;
+}
+
+.map :global(.leaflet-popup-tip) {
+  background: var(--map-paper);
+  box-shadow: none;
+}
+
+.map :global(.leaflet-popup-close-button) {
+  color: var(--map-ink) !important;
+  font-family: var(--font-sans);
+}
+
+/* Paper-grain overlay pane — tileable noise texture, sits between the
+   tile pane (z=200) and markers/popups (z=600) via a Leaflet-native Pane
+   rather than an absolutely-positioned sibling div, to avoid fighting
+   Leaflet's own stacking contexts. */
+.paperGrain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.15;
+  mix-blend-mode: multiply;
+  background-repeat: repeat;
+  background-size: 140px 140px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.24  0 0 0 0 0.17  0 0 0 0 0.14  0 0 0 0.15 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }

@@ -1,5 +1,6 @@
 'use client'
-import { MapContainer, TileLayer } from 'react-leaflet'
+import { useEffect, useState } from 'react'
+import { MapContainer, TileLayer, GeoJSON, Pane } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import type { Cafe } from '@/types'
@@ -23,7 +24,18 @@ interface Props {
   onCafeClick?: (cafe: Cafe) => void
 }
 
+const waterStyle = () => ({ className: 'water-feature' })
+const parkStyle = () => ({ className: 'park-feature' })
+
 export default function MapInner({ cafes, onCafeClick }: Props) {
+  const [waterData, setWaterData] = useState(null)
+  const [parksData, setParksData] = useState(null)
+
+  useEffect(() => {
+    fetch('/geo/water.geojson').then(r => r.json()).then(setWaterData)
+    fetch('/geo/parks.geojson').then(r => r.json()).then(setParksData)
+  }, [])
+
   return (
     <MapContainer
       center={NYC_CENTER}
@@ -35,12 +47,51 @@ export default function MapInner({ cafes, onCafeClick }: Props) {
       className={styles.map}
       style={{ height: '100%', width: '100%' }}
     >
+      {/* Hand-drawn watercolor filter defs — referenced via CSS `filter: url(#id)`
+          on the GeoJSON landmark overlay (MapContainer.module.css). Housed here
+          since this component owns the map/overlay lifecycle. */}
+      <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
+        <defs>
+          <filter id="sb-water-feather" x="-30%" y="-30%" width="160%" height="160%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="5" result="n" />
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="10" />
+            <feGaussianBlur stdDeviation="1.2" />
+          </filter>
+          <filter id="sb-park-feather" x="-30%" y="-30%" width="160%" height="160%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="3" seed="9" result="n" />
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="12" />
+            <feGaussianBlur stdDeviation="1.4" />
+          </filter>
+          <filter id="sb-avenue-wobble" x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="13" result="n" />
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="6" />
+          </filter>
+        </defs>
+      </svg>
+
       <TileLayer
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         subdomains="abcd"
         maxZoom={20}
       />
+
+      {/* Paper-grain texture — Leaflet-native Pane so it stacks correctly
+          (above tiles z=200, below markers z=600) without fighting CSS
+          stacking contexts. */}
+      <Pane name="paperGrain" style={{ zIndex: 250 }}>
+        <div className={styles.paperGrain} />
+      </Pane>
+
+      {/* Real-geometry landmark overlay — iconic elements only (Hudson/East
+          River from NYC Open Data's Hydrography dataset, Central Park/Prospect
+          Park from Parks Properties). Genuine georeferenced SVG paths, so each
+          feature type can carry its own differentiated hand-drawn filter,
+          unlike the flattened raster tiles. Avenues dropped for now — no real
+          street-centerline data available yet. */}
+      {waterData && <GeoJSON data={waterData} style={waterStyle} />}
+      {parksData && <GeoJSON data={parksData} style={parkStyle} />}
+
       {cafes.map(cafe => (
         <CafePin key={cafe.id} cafe={cafe} onClick={onCafeClick} />
       ))}

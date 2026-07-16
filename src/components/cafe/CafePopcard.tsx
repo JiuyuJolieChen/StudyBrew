@@ -13,8 +13,8 @@ export default function CafePopcard({ cafe }: Props) {
       <p className={styles.name}>{cafe.name}</p>
       <p className={styles.address}>{cafe.address}</p>
       <div className={styles.attrs}>
-        <span className={styles.attr}>{WIFI_LABELS[cafe.wifi]}</span>
-        <span className={styles.attr}>{OUTLETS_LABELS[cafe.outlets]}</span>
+        <span className={`${styles.attr} ${styles.attrWifi}`}>{WIFI_LABELS[cafe.wifi]}</span>
+        <span className={`${styles.attr} ${styles.attrOutlet}`}>{OUTLETS_LABELS[cafe.outlets]}</span>
       </div>
       <Link href={`/cafe/${cafe.id}`} className={styles.link}>
         View details →
