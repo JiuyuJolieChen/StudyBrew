@@ -4,18 +4,11 @@ import L from 'leaflet'
 import type { Cafe } from '@/types'
 import CafePopcard from '@/components/cafe/CafePopcard'
 
-const defaultIcon = new L.Icon({
-  iconUrl:      '/icons/pin-default.svg',
-  iconSize:     [24, 32],
-  iconAnchor:   [12, 32],
-  popupAnchor:  [0, -32],
-})
-
-const unknownIcon = new L.Icon({
-  iconUrl:      '/icons/pin-unknown.svg',
-  iconSize:     [24, 32],
-  iconAnchor:   [12, 32],
-  popupAnchor:  [0, -32],
+const cupIcon = new L.Icon({
+  iconUrl:      '/icons/coffee_cup_transparent.png',
+  iconSize:     [34, 44],
+  iconAnchor:   [17, 22],
+  popupAnchor:  [0, -22],
 })
 
 interface Props {
@@ -24,12 +17,10 @@ interface Props {
 }
 
 export default function CafePin({ cafe, onClick }: Props) {
-  const icon = cafe.hours ? defaultIcon : unknownIcon
-
   return (
     <Marker
       position={[cafe.lat, cafe.lng]}
-      icon={icon}
+      icon={cupIcon}
       eventHandlers={{ click: () => onClick?.(cafe) }}
     >
       <Popup>
