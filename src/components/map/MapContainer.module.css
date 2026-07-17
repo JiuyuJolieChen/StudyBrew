@@ -83,6 +83,25 @@
   filter: url(#sb-avenue-wobble);
 }
 
+/* Cafe pin — a coffee-cup illustration composited over a soft blurred
+   watercolor wash (L.divIcon; Leaflet sizes the wrapper via iconSize, we
+   just position the two layers within it). Do NOT set `position` here —
+   Leaflet's own `.leaflet-marker-icon` class already requires
+   `position: absolute` for its transform-based placement math, and
+   overriding it (even to `relative`) breaks marker positioning. */
+.map :global(.cup-marker-wash) {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.map :global(.cup-marker-img) {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 /* Popup chrome — override Leaflet's stock white popup box to match the
    paper palette. Wrapper and tip both need updating together or their
    shadows/colors mismatch. */

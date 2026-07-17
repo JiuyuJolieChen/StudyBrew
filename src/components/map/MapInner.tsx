@@ -66,6 +66,11 @@ export default function MapInner({ cafes, onCafeClick }: Props) {
             <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="13" result="n" />
             <feDisplacementMap in="SourceGraphic" in2="n" scale="6" />
           </filter>
+          <filter id="sb-icon-wash" x="-30%" y="-30%" width="160%" height="160%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="17" result="n" />
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="8" />
+            <feGaussianBlur stdDeviation="2" />
+          </filter>
         </defs>
       </svg>
 
