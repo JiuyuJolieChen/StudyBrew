@@ -57,7 +57,12 @@
   fill: var(--map-water-deep);
   fill-opacity: 0.4;
   mix-blend-mode: multiply;
-  stroke: none;
+  /* Matching-color stroke closes hairline seams between adjacent
+     independently-classified water polygons (e.g. Hudson Riv meeting
+     Upper New York Bay) that don't tile pixel-perfectly in the source data. */
+  stroke: var(--map-water-deep);
+  stroke-width: 1.5;
+  stroke-opacity: 0.4;
   filter: url(#sb-water-feather);
 }
 
