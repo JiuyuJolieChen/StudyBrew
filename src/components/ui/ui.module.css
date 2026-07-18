@@ -46,17 +46,35 @@
 }
 
 .secondary {
-  background-color: var(--color-white);
-  border-color: var(--color-ink);
+  background-color: var(--color-paper-render);
+  border-color: var(--color-paper-render);
   color: var(--color-ink);
 }
 
 .secondary:hover:not(:disabled) {
-  background-color: var(--color-gray-100);
+  background-color: #ecdfc4;
+  border-color: #ecdfc4;
 }
 
 .secondary:active:not(:disabled) {
-  background-color: var(--color-gray-200);
+  background-color: #e2d2ad;
+  border-color: #e2d2ad;
+}
+
+.accent {
+  background-color: var(--color-accent-brown);
+  border-color: var(--color-accent-brown);
+  color: var(--color-white);
+}
+
+.accent:hover:not(:disabled) {
+  background-color: #6b5239;
+  border-color: #6b5239;
+}
+
+.accent:active:not(:disabled) {
+  background-color: #5c4630;
+  border-color: #5c4630;
 }
 
 .ghost {

@@ -8,6 +8,7 @@ import MapContainer from '@/components/map/MapContainer'
 import FilterBar from '@/components/filters/FilterBar'
 import CafeCard from '@/components/cafe/CafeCard'
 import Button from '@/components/ui/Button'
+import WatercolorSurface from '@/components/ui/WatercolorSurface'
 import styles from './HomeClient.module.css'
 
 interface HomeClientProps {
@@ -40,11 +41,12 @@ export default function HomeClient({ initialCafes }: HomeClientProps) {
     <div className={styles.root}>
       {/* Header */}
       <header className={styles.header}>
+        <WatercolorSurface seed={1} />
         <Link href="/" className={styles.logo}>
           StudyBrew
         </Link>
-        <Link href="/add">
-          <Button variant="secondary" size="sm">
+        <Link href="/add" className={styles.headerCta}>
+          <Button variant="accent" size="sm">
             Add a café
           </Button>
         </Link>
@@ -52,13 +54,17 @@ export default function HomeClient({ initialCafes }: HomeClientProps) {
 
       {/* Filter bar */}
       <div className={styles.filterBar}>
-        <FilterBar filters={filters} onChange={handleFilterChange} />
+        <WatercolorSurface seed={2} />
+        <div className={styles.filterBarContent}>
+          <FilterBar filters={filters} onChange={handleFilterChange} />
+        </div>
       </div>
 
       {/* Main content */}
       <div className={styles.main}>
         {/* List panel */}
         <aside className={listPanelClass}>
+          <WatercolorSurface seed={1} />
           <div className={styles.listCount}>
             {cafeCount} café{cafeCount !== 1 ? 's' : ''}
           </div>

@@ -1,10 +1,16 @@
 .popcard {
+  position: relative;
+  border-radius: 10px;
   font-family: var(--font-sans);
   color: var(--map-label);
-  background: var(--map-paper);
   min-width: 260px;
   max-width: 320px;
   padding: 0 4px 4px;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
 }
 
 .name {

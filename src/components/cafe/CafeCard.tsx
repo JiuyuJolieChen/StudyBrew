@@ -4,11 +4,18 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Cafe } from '@/types'
 import { BOROUGH_LABELS, WIFI_LABELS, OUTLETS_LABELS, DESK_SIZE_LABELS, SEATS_LABELS, AMENITY_ICONS } from '@/lib/constants'
+import WatercolorSurface from '@/components/ui/WatercolorSurface'
 import styles from './CafeCard.module.css'
 
 interface CafeCardProps {
   cafe: Cafe
   onClick?: () => void
+}
+
+function seedFromId(id: string): 1 | 2 | 3 {
+  let hash = 0
+  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) | 0
+  return ((Math.abs(hash) % 3) + 1) as 1 | 2 | 3
 }
 
 export default function CafeCard({ cafe, onClick }: CafeCardProps) {
@@ -37,6 +44,7 @@ export default function CafeCard({ cafe, onClick }: CafeCardProps) {
       }}
       aria-label={`${cafe.name}, ${cafe.address}`}
     >
+      <WatercolorSurface seed={seedFromId(cafe.id)} />
       <div className={styles['card-body']}>
         <div className={styles['card-header']}>
           <div className={styles['card-meta']}>

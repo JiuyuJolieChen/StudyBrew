@@ -5,29 +5,41 @@
 }
 
 .header {
+  position: relative;
+  border-radius: 0;
   height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--space-6);
-  border-bottom: 1px solid var(--color-border);
   flex-shrink: 0;
-  background: var(--color-bg);
   z-index: var(--z-filter);
 }
 
 .logo {
+  position: relative;
+  z-index: 1;
   font-size: var(--text-lg);
   font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-tight);
   color: var(--color-ink);
 }
 
+.headerCta {
+  position: relative;
+  z-index: 1;
+}
+
 .filterBar {
+  position: relative;
+  border-radius: 0;
   flex-shrink: 0;
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-bg);
   z-index: var(--z-filter);
+}
+
+.filterBarContent {
+  position: relative;
+  z-index: 1;
 }
 
 .main {
@@ -37,29 +49,33 @@
 }
 
 .listPanel {
+  position: relative;
+  border-radius: 0;
   width: var(--panel-width);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--color-border);
   overflow: hidden;
-  transition: width var(--transition-slow), border-color var(--transition-slow);
+  transition: width var(--transition-slow);
 }
 
 .collapsed {
   width: 0;
-  border-right-color: transparent;
 }
 
 .listCount {
+  position: relative;
+  z-index: 1;
   padding: var(--space-3) var(--space-4);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-paper-render);
   flex-shrink: 0;
 }
 
 .listScroll {
+  position: relative;
+  z-index: 1;
   flex: 1;
   overflow-y: auto;
 }
