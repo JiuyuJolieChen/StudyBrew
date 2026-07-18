@@ -25,13 +25,12 @@ export default function CafePopcard({ cafe }: Props) {
   return (
     <div className={styles.popcard}>
       <p className={styles.name}>{cafe.name}</p>
-      <p className={styles.address}>{cafe.address}</p>
       <div className={styles.attrs}>
-        <span className={`${styles.attr} ${styles.attrWifi}`}>
+        <span className={`${styles.attr} ${cafe.wifi === 'none' ? styles.attrNegative : styles.attrPositive}`}>
           <img src={AMENITY_ICONS.wifi} alt="" className={styles.attrIcon} />
           {WIFI_LABELS[cafe.wifi]}
         </span>
-        <span className={`${styles.attr} ${styles.attrOutlet}`}>
+        <span className={`${styles.attr} ${cafe.outlets === 'none' ? styles.attrNegative : styles.attrPositive}`}>
           <img src={AMENITY_ICONS.outlets} alt="" className={styles.attrIcon} />
           {OUTLETS_LABELS[cafe.outlets]}
         </span>
@@ -46,11 +45,12 @@ export default function CafePopcard({ cafe }: Props) {
           </span>
         )}
       </div>
+      <p className={styles.address}>{cafe.address}</p>
       <div className={styles.actions}>
-        <Link href={`/cafe/${cafe.id}`}>
-          <Button variant="secondary" size="sm">View details</Button>
+        <Link href={`/cafe/${cafe.id}`} className={styles.actionLink}>
+          <Button variant="secondary" size="sm" className={styles.actionBtn}>View details</Button>
         </Link>
-        <Button variant="secondary" size="sm" onClick={handleCopy}>
+        <Button variant="secondary" size="sm" className={styles.actionBtn} onClick={handleCopy}>
           {copied ? 'Copied!' : 'Copy address'}
         </Button>
       </div>

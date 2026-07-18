@@ -14,8 +14,8 @@
   --map-ink:          #3c3a34;
   --map-label:        #4a4741;
   --map-label-soft:   #6b675e;
-  --map-accent-wifi:    #7fa66b;
-  --map-accent-outlet:  #c1704a;
+  --map-accent-positive: #7fa66b;
+  --map-accent-negative: #b5484a;
   --map-shadow: 0 4px 14px rgba(60,58,52,0.22), 0 1px 3px rgba(60,58,52,0.15);
 }
 
