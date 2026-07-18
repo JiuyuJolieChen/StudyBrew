@@ -2,9 +2,9 @@
   font-family: var(--font-sans);
   color: var(--map-label);
   background: var(--map-paper);
-  min-width: 160px;
-  max-width: 220px;
-  padding: 4px 2px;
+  min-width: 220px;
+  max-width: 280px;
+  padding: 0 4px 4px;
 }
 
 .name {
@@ -25,22 +25,23 @@
 .attrs {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  margin-bottom: 8px;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0;
 }
 
 .attr {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 11px;
+  gap: 6px;
+  font-size: 15px;
   color: var(--map-label-soft);
   line-height: 1.4;
 }
 
 .attrIcon {
-  width: 12px;
-  height: 12px;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
   object-fit: contain;
 }
@@ -53,15 +54,9 @@
   color: var(--map-accent-outlet);
 }
 
-.link {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--map-ink);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.link:hover {
-  color: var(--map-label-soft);
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
 }

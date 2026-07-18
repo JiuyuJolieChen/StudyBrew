@@ -1,6 +1,10 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import type { Cafe } from '@/types'
 import { WIFI_LABELS, OUTLETS_LABELS, DESK_SIZE_LABELS, SEATS_LABELS, AMENITY_ICONS } from '@/lib/constants'
+import Button from '@/components/ui/Button'
 import styles from './CafePopcard.module.css'
 
 interface Props {
@@ -8,6 +12,16 @@ interface Props {
 }
 
 export default function CafePopcard({ cafe }: Props) {
+  const [copied, setCopied] = useState(false)
+
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(cafe.address)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch { /* ignore — clipboard API unavailable */ }
+  }
+
   return (
     <div className={styles.popcard}>
       <p className={styles.name}>{cafe.name}</p>
@@ -32,9 +46,14 @@ export default function CafePopcard({ cafe }: Props) {
           </span>
         )}
       </div>
-      <Link href={`/cafe/${cafe.id}`} className={styles.link}>
-        View details →
-      </Link>
+      <div className={styles.actions}>
+        <Link href={`/cafe/${cafe.id}`}>
+          <Button variant="secondary" size="sm">View details</Button>
+        </Link>
+        <Button variant="secondary" size="sm" onClick={handleCopy}>
+          {copied ? 'Copied!' : 'Copy address'}
+        </Button>
+      </div>
     </div>
   )
 }
