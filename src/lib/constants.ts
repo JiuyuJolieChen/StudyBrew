@@ -16,8 +16,8 @@ export const BOROUGH_LABELS: Record<BoroughEnum, string> = {
 
 export const WIFI_LABELS: Record<WifiEnum, string> = {
   none:          'No WiFi',
-  free:          'Have WiFi',
-  paid_or_login: 'Have WiFi',
+  free:          'Free WiFi',
+  paid_or_login: 'Free WiFi',
 }
 
 export const WIFI_FORM_LABELS: Record<WifiEnum, string> = {
@@ -28,7 +28,7 @@ export const WIFI_FORM_LABELS: Record<WifiEnum, string> = {
 
 export const WIFI_FILTER_GROUPS: { key: 'none' | 'have_wifi'; values: WifiEnum[]; label: string }[] = [
   { key: 'none',      values: ['none'],                 label: 'No WiFi' },
-  { key: 'have_wifi', values: ['free', 'paid_or_login'], label: 'Have WiFi' },
+  { key: 'have_wifi', values: ['free', 'paid_or_login'], label: 'Free WiFi' },
 ]
 
 export const OUTLETS_LABELS: Record<OutletsEnum, string> = {
