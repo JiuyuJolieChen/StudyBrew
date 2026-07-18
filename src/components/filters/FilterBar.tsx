@@ -2,13 +2,15 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import type { FilterState, BoroughEnum, WifiEnum, OutletsEnum, DeskSizeEnum, NoiseEnum } from '@/types'
+import type { FilterState, BoroughEnum, WifiEnum, OutletsEnum, DeskSizeEnum, SeatsEnum, NoiseEnum } from '@/types'
 import {
   BOROUGH_LABELS,
   WIFI_LABELS,
   OUTLETS_LABELS,
   DESK_SIZE_LABELS,
+  SEATS_LABELS,
   NOISE_LABELS,
+  AMENITY_ICONS,
 } from '@/lib/constants'
 import styles from './FilterBar.module.css'
 
@@ -19,11 +21,13 @@ interface FilterBarProps {
 
 function FilterDropdown<T extends string>({
   label,
+  icon,
   options,
   selected,
   onToggle,
 }: {
   label: string
+  icon?: string
   options: { value: T; label: string }[]
   selected: T[]
   onToggle: (value: T) => void
@@ -78,6 +82,7 @@ function FilterDropdown<T extends string>({
         aria-expanded={open}
         aria-haspopup="true"
       >
+        {icon && <img src={icon} alt="" className={styles.triggerIcon} />}
         {label}
         {count > 0 && <span className={styles.badge}>{count}</span>}
         <span className={styles.chevron} aria-hidden="true">{open ? '▴' : '▾'}</span>
@@ -125,21 +130,31 @@ export default function FilterBar({ filters, onChange }: FilterBarProps) {
       />
       <FilterDropdown<WifiEnum>
         label="WiFi"
+        icon={AMENITY_ICONS.wifi}
         options={Object.entries(WIFI_LABELS).map(([v, l]) => ({ value: v as WifiEnum, label: l }))}
         selected={filters.wifi}
         onToggle={v => toggle('wifi', v)}
       />
       <FilterDropdown<OutletsEnum>
         label="Outlets"
+        icon={AMENITY_ICONS.outlets}
         options={Object.entries(OUTLETS_LABELS).map(([v, l]) => ({ value: v as OutletsEnum, label: l }))}
         selected={filters.outlets}
         onToggle={v => toggle('outlets', v)}
       />
       <FilterDropdown<DeskSizeEnum>
         label="Desk size"
+        icon={AMENITY_ICONS.desk_size}
         options={Object.entries(DESK_SIZE_LABELS).map(([v, l]) => ({ value: v as DeskSizeEnum, label: l }))}
         selected={filters.desk_size}
         onToggle={v => toggle('desk_size', v)}
+      />
+      <FilterDropdown<SeatsEnum>
+        label="Seats"
+        icon={AMENITY_ICONS.seats}
+        options={Object.entries(SEATS_LABELS).map(([v, l]) => ({ value: v as SeatsEnum, label: l }))}
+        selected={filters.seats}
+        onToggle={v => toggle('seats', v)}
       />
       <FilterDropdown<NoiseEnum>
         label="Noise"

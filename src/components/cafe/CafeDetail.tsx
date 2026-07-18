@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Wifi, Zap, Monitor, Users, Volume2 } from 'lucide-react'
+import { Volume2 } from 'lucide-react'
 import { Cafe } from '@/types'
 import CopyAddress from './CopyAddress'
 import {
@@ -9,6 +9,7 @@ import {
   DESK_SIZE_LABELS,
   SEATS_LABELS,
   NOISE_LABELS,
+  AMENITY_ICONS,
 } from '@/lib/constants'
 import AttributeRow from './AttributeRow'
 import HoursTable from './HoursTable'
@@ -36,23 +37,23 @@ export default function CafeDetail({ cafe }: CafeDetailProps) {
         <p className={styles['detail-section-heading']}>Details</p>
         <div className={styles['detail-attributes']}>
           <AttributeRow
-            icon={<Wifi size={16} />}
+            icon={<img src={AMENITY_ICONS.wifi} width={16} height={16} alt="" />}
             label="WiFi"
             value={WIFI_LABELS[cafe.wifi]}
           />
           <AttributeRow
-            icon={<Zap size={16} />}
+            icon={<img src={AMENITY_ICONS.outlets} width={16} height={16} alt="" />}
             label="Outlets"
             value={OUTLETS_LABELS[cafe.outlets]}
           />
           <AttributeRow
-            icon={<Monitor size={16} />}
+            icon={<img src={AMENITY_ICONS.desk_size} width={16} height={16} alt="" />}
             label="Desk size"
             value={DESK_SIZE_LABELS[cafe.desk_size]}
           />
           {cafe.seats && (
             <AttributeRow
-              icon={<Users size={16} />}
+              icon={<img src={AMENITY_ICONS.seats} width={16} height={16} alt="" />}
               label="Seats"
               value={SEATS_LABELS[cafe.seats]}
             />

@@ -40,6 +40,7 @@ export interface FilterState {
   outlets:   OutletsEnum[]
   noise:     NoiseEnum[]
   desk_size: DeskSizeEnum[]
+  seats:     SeatsEnum[]
 }
 
 export interface GeoResult {

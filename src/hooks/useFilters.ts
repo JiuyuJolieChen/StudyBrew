@@ -7,6 +7,7 @@ const INITIAL: FilterState = {
   outlets:   [],
   noise:     [],
   desk_size: [],
+  seats:     [],
 }
 
 export function useFilters(allCafes: Cafe[]) {
@@ -18,6 +19,7 @@ export function useFilters(allCafes: Cafe[]) {
       if (filters.wifi.length      && !filters.wifi.includes(cafe.wifi))            return false
       if (filters.outlets.length   && !filters.outlets.includes(cafe.outlets))      return false
       if (filters.desk_size.length && !filters.desk_size.includes(cafe.desk_size))  return false
+      if (filters.seats.length     && (!cafe.seats || !filters.seats.includes(cafe.seats))) return false
       if (filters.noise.length     && (!cafe.noise || !filters.noise.includes(cafe.noise))) return false
       return true
     })

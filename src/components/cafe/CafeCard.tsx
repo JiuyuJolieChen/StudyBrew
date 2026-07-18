@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Cafe } from '@/types'
-import { BOROUGH_LABELS, WIFI_LABELS, OUTLETS_LABELS } from '@/lib/constants'
+import { BOROUGH_LABELS, WIFI_LABELS, OUTLETS_LABELS, DESK_SIZE_LABELS, SEATS_LABELS, AMENITY_ICONS } from '@/lib/constants'
 import styles from './CafeCard.module.css'
 
 interface CafeCardProps {
@@ -56,8 +56,24 @@ export default function CafeCard({ cafe, onClick }: CafeCardProps) {
         </div>
 
         <div className={styles['card-chips']}>
-          <span className={styles['attr-chip']}>{WIFI_LABELS[cafe.wifi]}</span>
-          <span className={styles['attr-chip']}>{OUTLETS_LABELS[cafe.outlets]}</span>
+          <span className={styles['attr-chip']}>
+            <img src={AMENITY_ICONS.wifi} alt="" className={styles['attr-chip-icon']} />
+            {WIFI_LABELS[cafe.wifi]}
+          </span>
+          <span className={styles['attr-chip']}>
+            <img src={AMENITY_ICONS.outlets} alt="" className={styles['attr-chip-icon']} />
+            {OUTLETS_LABELS[cafe.outlets]}
+          </span>
+          <span className={styles['attr-chip']}>
+            <img src={AMENITY_ICONS.desk_size} alt="" className={styles['attr-chip-icon']} />
+            {DESK_SIZE_LABELS[cafe.desk_size]}
+          </span>
+          {cafe.seats && (
+            <span className={styles['attr-chip']}>
+              <img src={AMENITY_ICONS.seats} alt="" className={styles['attr-chip-icon']} />
+              {SEATS_LABELS[cafe.seats]}
+            </span>
+          )}
         </div>
 
         <div className={styles['card-footer']}>

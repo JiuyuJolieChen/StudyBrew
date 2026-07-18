@@ -45,6 +45,13 @@ export const NOISE_LABELS: Record<NoiseEnum, string> = {
   lively:   'Lively',
 }
 
+export const AMENITY_ICONS = {
+  wifi:      '/icons/wifi.png',
+  outlets:   '/icons/outlet.png',
+  desk_size: '/icons/table.png',
+  seats:     '/icons/seat.png',
+} as const
+
 export const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const
 export type Day = typeof DAYS[number]
 
