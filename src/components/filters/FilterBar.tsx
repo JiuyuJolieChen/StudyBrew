@@ -2,10 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import type { FilterState, BoroughEnum, WifiEnum, OutletsEnum, DeskSizeEnum, SeatsEnum, NoiseEnum } from '@/types'
+import type { FilterState, BoroughEnum, OutletsEnum, DeskSizeEnum, SeatsEnum, NoiseEnum } from '@/types'
 import {
   BOROUGH_LABELS,
-  WIFI_LABELS,
+  WIFI_FILTER_GROUPS,
   OUTLETS_LABELS,
   DESK_SIZE_LABELS,
   SEATS_LABELS,
@@ -120,6 +120,19 @@ export default function FilterBar({ filters, onChange }: FilterBarProps) {
     onChange({ ...filters, [key]: next as FilterState[K] })
   }
 
+  const wifiSelected = WIFI_FILTER_GROUPS
+    .filter(g => g.values.some(v => filters.wifi.includes(v)))
+    .map(g => g.key)
+
+  function toggleWifiGroup(key: 'none' | 'have_wifi') {
+    const group = WIFI_FILTER_GROUPS.find(g => g.key === key)!
+    const isOn = group.values.some(v => filters.wifi.includes(v))
+    const next = isOn
+      ? filters.wifi.filter(v => !group.values.includes(v))
+      : [...filters.wifi, ...group.values.filter(v => !filters.wifi.includes(v))]
+    onChange({ ...filters, wifi: next })
+  }
+
   return (
     <nav className={styles.bar} aria-label="Filter cafes">
       <FilterDropdown<BoroughEnum>
@@ -128,12 +141,12 @@ export default function FilterBar({ filters, onChange }: FilterBarProps) {
         selected={filters.borough}
         onToggle={v => toggle('borough', v)}
       />
-      <FilterDropdown<WifiEnum>
+      <FilterDropdown<'none' | 'have_wifi'>
         label="WiFi"
         icon={AMENITY_ICONS.wifi}
-        options={Object.entries(WIFI_LABELS).map(([v, l]) => ({ value: v as WifiEnum, label: l }))}
-        selected={filters.wifi}
-        onToggle={v => toggle('wifi', v)}
+        options={WIFI_FILTER_GROUPS.map(g => ({ value: g.key, label: g.label }))}
+        selected={wifiSelected}
+        onToggle={toggleWifiGroup}
       />
       <FilterDropdown<OutletsEnum>
         label="Outlets"

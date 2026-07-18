@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import type { Cafe, GeoResult, HoursJson, BoroughEnum, WifiEnum, OutletsEnum, DeskSizeEnum, SeatsEnum, NoiseEnum } from '@/types'
 import {
   BOROUGH_LABELS,
-  WIFI_LABELS,
+  WIFI_FORM_LABELS,
   OUTLETS_LABELS,
   DESK_SIZE_LABELS,
   SEATS_LABELS,
@@ -169,7 +169,7 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
               label="WiFi *"
               value={form.wifi}
               onChange={e => set('wifi', e.target.value as WifiEnum | '')}
-              options={toOptions(WIFI_LABELS, 'Select WiFi…')}
+              options={toOptions(WIFI_FORM_LABELS, 'Select WiFi…')}
             />
             <Select
               label="Outlets *"
