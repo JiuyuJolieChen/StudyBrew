@@ -60,7 +60,7 @@
   background: none;
   border: none;
   padding: 0;
-  font-family: var(--font-sans);
+  font-family: var(--font-address);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
   line-height: var(--leading-normal);
@@ -245,6 +245,23 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--transition-fast);
+}
+
+.back-link:hover {
+  color: var(--color-text);
 }
 
 .detail-edit-link {

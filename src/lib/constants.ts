@@ -61,6 +61,7 @@ export const AMENITY_ICONS = {
   outlets:   '/icons/outlet.png',
   desk_size: '/icons/table.png',
   seats:     '/icons/seat.png',
+  noise:     '/icons/noise.png',
 } as const
 
 export const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const

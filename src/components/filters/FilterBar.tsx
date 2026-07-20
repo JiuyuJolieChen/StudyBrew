@@ -171,6 +171,7 @@ export default function FilterBar({ filters, onChange }: FilterBarProps) {
       />
       <FilterDropdown<NoiseEnum>
         label="Noise"
+        icon={AMENITY_ICONS.noise}
         options={Object.entries(NOISE_LABELS).map(([v, l]) => ({ value: v as NoiseEnum, label: l }))}
         selected={filters.noise}
         onToggle={v => toggle('noise', v)}

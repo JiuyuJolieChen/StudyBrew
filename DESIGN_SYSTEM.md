@@ -20,8 +20,9 @@ in matters:
 | **Watercolor / paper** | `MapContainer.module.css` (map-scoped) + `--color-paper*` tokens in `globals.css` | The map, nav bar, list panel, café cards, café detail page, map popup — i.e. anywhere the hand-drawn "paper card" look applies |
 
 Typography is shared across both: a single custom hand-drawn font,
-`'A Little Pot'` (embedded as a base64 `@font-face` at the top of
-`globals.css`), used everywhere via `--font-sans`.
+`'Shadows Into Light'` (file-based `@font-face` at the top of
+`globals.css`, sourced from `public/fonts/ShadowsIntoLight.ttf`), used
+everywhere via `--font-sans`.
 
 ---
 
@@ -93,8 +94,16 @@ inside the map subtree):
 ## Typography
 
 ```css
---font-sans: 'A Little Pot', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+--font-sans: 'Shadows Into Light', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+--font-address: 'Arial Narrow 7', Arial, sans-serif;
 ```
+
+`--font-address` is a second, narrower font used **only** for displayed
+address text (`CafeCard`/`CafeDetail`'s `.copy-address`, `CafePopcard`'s
+`.address`) — everything else stays on `--font-sans`. Both fonts are
+declared as file-based `@font-face`s at the top of `globals.css`, sourced
+from `public/fonts/ShadowsIntoLight.ttf` and `public/fonts/arial_narrow_7.ttf`
+respectively.
 
 | Token | Value (px) |
 |---|---|

@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Volume2 } from 'lucide-react'
 import { Cafe } from '@/types'
 import CopyAddress from './CopyAddress'
 import {
@@ -63,7 +62,7 @@ export default function CafeDetail({ cafe }: CafeDetailProps) {
             )}
             {cafe.noise && (
               <AttributeRow
-                icon={<Volume2 size={16} />}
+                icon={<img src={AMENITY_ICONS.noise} width={16} height={16} alt="" />}
                 label="Noise"
                 value={NOISE_LABELS[cafe.noise]}
               />

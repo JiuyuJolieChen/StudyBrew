@@ -100,6 +100,11 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  transition: transform 150ms ease;
+}
+
+.map :global(.cup-marker:hover .cup-marker-img) {
+  transform: translate(-50%, -50%) scale(1.15);
 }
 
 /* Popup chrome — override Leaflet's stock white popup box to match the

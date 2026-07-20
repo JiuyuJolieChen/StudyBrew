@@ -1,8 +1,10 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import CafeDetail from '@/components/cafe/CafeDetail'
 import type { Cafe } from '@/types'
 import type { Metadata } from 'next'
+import styles from '@/components/cafe/CafeCard.module.css'
 
 interface Props {
   params: { id: string }
@@ -27,6 +29,7 @@ export default async function CafePage({ params }: Props) {
 
   return (
     <main style={{ maxWidth: 720, margin: '0 auto', padding: 'var(--space-8) var(--space-4)' }}>
+      <Link href="/" className={styles['back-link']}>← Back to map</Link>
       <CafeDetail cafe={data as Cafe} />
     </main>
   )
