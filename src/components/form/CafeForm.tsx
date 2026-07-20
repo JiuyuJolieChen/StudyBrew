@@ -9,9 +9,11 @@ import {
   DESK_SIZE_LABELS,
   SEATS_LABELS,
   NOISE_LABELS,
+  AMENITY_ICONS,
 } from '@/lib/constants'
 import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
+import CheckboxOptionGroup from '@/components/ui/CheckboxOptionGroup'
 import Button from '@/components/ui/Button'
 import Toast from '@/components/ui/Toast'
 import AddressSearch from './AddressSearch'
@@ -164,41 +166,40 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
             required
           />
 
-          <div className={styles.row}>
-            <Select
-              label="WiFi *"
-              value={form.wifi}
-              onChange={e => set('wifi', e.target.value as WifiEnum | '')}
-              options={toOptions(WIFI_FORM_LABELS, 'Select WiFi…')}
-            />
-            <Select
-              label="Outlets *"
-              value={form.outlets}
-              onChange={e => set('outlets', e.target.value as OutletsEnum | '')}
-              options={toOptions(OUTLETS_LABELS, 'Select outlets…')}
-            />
-          </div>
-
-          <div className={styles.row}>
-            <Select
-              label="Desk size *"
-              value={form.desk_size}
-              onChange={e => set('desk_size', e.target.value as DeskSizeEnum | '')}
-              options={toOptions(DESK_SIZE_LABELS, 'Select desk size…')}
-            />
-            <Select
-              label="Seats (optional)"
-              value={form.seats}
-              onChange={e => set('seats', e.target.value as SeatsEnum | '')}
-              options={toOptions(SEATS_LABELS, 'Select seats…')}
-            />
-          </div>
-
-          <Select
+          <CheckboxOptionGroup
+            label="WiFi *"
+            icon={AMENITY_ICONS.wifi}
+            value={form.wifi}
+            onChange={v => set('wifi', v as WifiEnum | '')}
+            options={toOptions(WIFI_FORM_LABELS)}
+          />
+          <CheckboxOptionGroup
+            label="Outlets *"
+            icon={AMENITY_ICONS.outlets}
+            value={form.outlets}
+            onChange={v => set('outlets', v as OutletsEnum | '')}
+            options={toOptions(OUTLETS_LABELS)}
+          />
+          <CheckboxOptionGroup
+            label="Desk size *"
+            icon={AMENITY_ICONS.desk_size}
+            value={form.desk_size}
+            onChange={v => set('desk_size', v as DeskSizeEnum | '')}
+            options={toOptions(DESK_SIZE_LABELS)}
+          />
+          <CheckboxOptionGroup
+            label="Seats (optional)"
+            icon={AMENITY_ICONS.seats}
+            value={form.seats}
+            onChange={v => set('seats', v as SeatsEnum | '')}
+            options={toOptions(SEATS_LABELS)}
+          />
+          <CheckboxOptionGroup
             label="Noise level (optional)"
+            icon={AMENITY_ICONS.noise}
             value={form.noise}
-            onChange={e => set('noise', e.target.value as NoiseEnum | '')}
-            options={toOptions(NOISE_LABELS, 'Select noise level…')}
+            onChange={v => set('noise', v as NoiseEnum | '')}
+            options={toOptions(NOISE_LABELS)}
           />
         </section>
 

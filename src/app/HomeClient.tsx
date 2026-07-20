@@ -44,6 +44,7 @@ export default function HomeClient({ initialCafes }: HomeClientProps) {
         <WatercolorSurface seed={1} />
         <Link href="/" className={styles.logo}>
           StudyBrew
+          <img src="/icons/coffee_cup_transparent.png" alt="" className={styles.logoIcon} />
         </Link>
         <Link href="/add" className={styles.headerCta}>
           <Button variant="accent" size="sm">

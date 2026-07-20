@@ -3,20 +3,24 @@ import { Cafe } from '@/types'
 import CopyAddress from './CopyAddress'
 import {
   BOROUGH_LABELS,
-  WIFI_LABELS,
+  WIFI_FORM_LABELS,
   OUTLETS_LABELS,
   DESK_SIZE_LABELS,
   SEATS_LABELS,
   NOISE_LABELS,
   AMENITY_ICONS,
 } from '@/lib/constants'
-import AttributeRow from './AttributeRow'
+import CheckboxOptionGroup from '@/components/ui/CheckboxOptionGroup'
 import HoursTable from './HoursTable'
 import WatercolorSurface from '@/components/ui/WatercolorSurface'
 import styles from './CafeCard.module.css'
 
 interface CafeDetailProps {
   cafe: Cafe
+}
+
+function toOptions<T extends string>(labels: Record<T, string>) {
+  return Object.entries(labels).map(([value, label]) => ({ value, label: label as string }))
 }
 
 export default function CafeDetail({ cafe }: CafeDetailProps) {
@@ -38,33 +42,43 @@ export default function CafeDetail({ cafe }: CafeDetailProps) {
         <div className={styles['detail-section']}>
           <p className={styles['detail-section-heading']}>Details</p>
           <div className={styles['detail-attributes']}>
-            <AttributeRow
-              icon={<img src={AMENITY_ICONS.wifi} width={16} height={16} alt="" />}
+            <CheckboxOptionGroup
               label="WiFi"
-              value={WIFI_LABELS[cafe.wifi]}
+              icon={AMENITY_ICONS.wifi}
+              value={cafe.wifi}
+              options={toOptions(WIFI_FORM_LABELS)}
+              readOnly
             />
-            <AttributeRow
-              icon={<img src={AMENITY_ICONS.outlets} width={16} height={16} alt="" />}
+            <CheckboxOptionGroup
               label="Outlets"
-              value={OUTLETS_LABELS[cafe.outlets]}
+              icon={AMENITY_ICONS.outlets}
+              value={cafe.outlets}
+              options={toOptions(OUTLETS_LABELS)}
+              readOnly
             />
-            <AttributeRow
-              icon={<img src={AMENITY_ICONS.desk_size} width={16} height={16} alt="" />}
+            <CheckboxOptionGroup
               label="Desk size"
-              value={DESK_SIZE_LABELS[cafe.desk_size]}
+              icon={AMENITY_ICONS.desk_size}
+              value={cafe.desk_size}
+              options={toOptions(DESK_SIZE_LABELS)}
+              readOnly
             />
             {cafe.seats && (
-              <AttributeRow
-                icon={<img src={AMENITY_ICONS.seats} width={16} height={16} alt="" />}
+              <CheckboxOptionGroup
                 label="Seats"
-                value={SEATS_LABELS[cafe.seats]}
+                icon={AMENITY_ICONS.seats}
+                value={cafe.seats}
+                options={toOptions(SEATS_LABELS)}
+                readOnly
               />
             )}
             {cafe.noise && (
-              <AttributeRow
-                icon={<img src={AMENITY_ICONS.noise} width={16} height={16} alt="" />}
+              <CheckboxOptionGroup
                 label="Noise"
-                value={NOISE_LABELS[cafe.noise]}
+                icon={AMENITY_ICONS.noise}
+                value={cafe.noise}
+                options={toOptions(NOISE_LABELS)}
+                readOnly
               />
             )}
           </div>

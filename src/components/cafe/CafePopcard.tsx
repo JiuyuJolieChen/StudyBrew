@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import type { Cafe } from '@/types'
 import { WIFI_LABELS, OUTLETS_LABELS, DESK_SIZE_LABELS, SEATS_LABELS, AMENITY_ICONS } from '@/lib/constants'
+import { getTodayHoursLabel } from '@/lib/hours'
 import Button from '@/components/ui/Button'
 import WatercolorSurface from '@/components/ui/WatercolorSurface'
 import styles from './CafePopcard.module.css'
@@ -48,6 +49,7 @@ export default function CafePopcard({ cafe }: Props) {
             </span>
           )}
         </div>
+        <p className={styles.time}>{getTodayHoursLabel(cafe.hours)}</p>
         <p className={styles.address}>{cafe.address}</p>
         <div className={styles.actions}>
           <Link href={`/cafe/${cafe.id}`} className={styles.actionLink}>

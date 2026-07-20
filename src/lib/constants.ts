@@ -44,9 +44,9 @@ export const DESK_SIZE_LABELS: Record<DeskSizeEnum, string> = {
 }
 
 export const SEATS_LABELS: Record<SeatsEnum, string> = {
-  s_0_10:   '0–10 seats',
-  s_10_20:  '10–20 seats',
-  s_20_30:  '20–30 seats',
+  s_0_10:   '0-10 seats',
+  s_10_20:  '10-20 seats',
+  s_20_30:  '20-30 seats',
   s_30_plus: '30+ seats',
 }
 
@@ -62,6 +62,11 @@ export const AMENITY_ICONS = {
   desk_size: '/icons/table.png',
   seats:     '/icons/seat.png',
   noise:     '/icons/noise.png',
+} as const
+
+export const CHECKBOX_ICONS = {
+  unchecked: '/icons/checkbox-unchecked.png',
+  checked:   '/icons/checkbox-checked.png',
 } as const
 
 export const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const

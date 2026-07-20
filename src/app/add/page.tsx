@@ -1,8 +1,11 @@
 import Link from 'next/link'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import CafeForm from '@/components/form/CafeForm'
+import WatercolorSurface from '@/components/ui/WatercolorSurface'
 import type { Cafe } from '@/types'
 import type { Metadata } from 'next'
+import formStyles from '@/components/form/CafeForm.module.css'
+import uiStyles from '@/components/ui/ui.module.css'
 
 export const metadata: Metadata = { title: 'Add a Café — StudyBrew NYC' }
 
@@ -37,12 +40,18 @@ export default async function AddPage({ searchParams }: Props) {
           marginBottom: 'var(--space-6)',
         }}
       >
-        ← Back to map
+        <span className={uiStyles.chevronLeft} aria-hidden="true" />
+        Back to map
       </Link>
-      <h1 style={{ fontSize: 'var(--text-3xl)', fontWeight: 'var(--weight-bold)', marginBottom: 'var(--space-8)' }}>
-        {searchParams.edit ? 'Edit café' : 'Add a café'}
-      </h1>
-      <CafeForm initialData={initialData} editId={searchParams.edit} />
+      <div className={formStyles['add-card']}>
+        <WatercolorSurface seed={2} />
+        <div className={formStyles['add-content']}>
+          <h1 style={{ fontSize: 'var(--text-3xl)', fontWeight: 'var(--weight-bold)', marginBottom: 'var(--space-8)' }}>
+            {searchParams.edit ? 'Edit café' : 'Add a café'}
+          </h1>
+          <CafeForm initialData={initialData} editId={searchParams.edit} />
+        </div>
+      </div>
     </main>
   )
 }
