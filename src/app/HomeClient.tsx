@@ -47,7 +47,7 @@ export default function HomeClient({ initialCafes }: HomeClientProps) {
           <img src="/icons/coffee_cup_transparent.png" alt="" className={styles.logoIcon} />
         </Link>
         <Link href="/add" className={styles.headerCta}>
-          <Button variant="accent" size="sm">
+          <Button variant="accent" size="sm" className={styles.addCafeBtn}>
             Add a café
           </Button>
         </Link>
