@@ -8,6 +8,7 @@ import MapContainer from '@/components/map/MapContainer'
 import FilterBar from '@/components/filters/FilterBar'
 import CafeCard from '@/components/cafe/CafeCard'
 import Button from '@/components/ui/Button'
+import ShareButton from '@/components/ui/ShareButton'
 import WatercolorSurface from '@/components/ui/WatercolorSurface'
 import styles from './HomeClient.module.css'
 
@@ -46,11 +47,14 @@ export default function HomeClient({ initialCafes }: HomeClientProps) {
           StudyBrew
           <img src="/icons/coffee_cup_transparent.png" alt="" className={styles.logoIcon} />
         </Link>
-        <Link href="/add" className={styles.headerCta}>
-          <Button variant="accent" size="sm" className={styles.addCafeBtn}>
-            Add a café
-          </Button>
-        </Link>
+        <div className={styles.headerActions}>
+          <ShareButton className={styles.shareBtn} />
+          <Link href="/add" className={styles.headerCta}>
+            <Button variant="accent" size="sm" className={styles.addCafeBtn}>
+              Add a café
+            </Button>
+          </Link>
+        </div>
       </header>
 
       {/* Filter bar */}

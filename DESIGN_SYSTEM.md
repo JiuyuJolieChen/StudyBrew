@@ -176,6 +176,19 @@ Form field primitives — `label?`, `error?` (renders red-bordered + error text 
 ```
 Inline SVG loading indicator, stroked in `--color-ink`.
 
+### `ShareButton`
+```tsx
+<ShareButton className={styles.shareBtn} />
+```
+Compound example of `Button` (`variant="secondary"`) + `Toast`: copies the
+current URL to the clipboard on click (with a `?ref=share` query param
+set/overwritten, so shared-link visits can later be told apart from organic
+traffic in analytics) and shows a `type="success"` toast ("Link copied to
+clipboard!"). Used in the header next to "Add a café" — `secondary`'s
+fill/text colors are identical to the Filter pill trigger, just with the
+rectangular `--radius-md` instead of `--radius-full`, so it reads as part of
+the same header action group without introducing a new variant.
+
 ### `WatercolorSurface` + `WatercolorDefs`
 The hand-drawn "paper card" background layer — used by the nav bar,
 filter bar, list panel, every café card, the café detail page, and the
@@ -209,7 +222,7 @@ by the filter/blur. That's why every consumer follows the same pattern:
 Two systems:
 
 1. **Custom illustrated PNGs** — `public/icons/`: `wifi.png`, `table.png`, `seat.png`, `outlet.png` (amenity icons, referenced via `AMENITY_ICONS` in `src/lib/constants.ts`), plus `coffee_cup_transparent.png` (map pin) and `pin-default.svg`/`pin-unknown.svg` (Leaflet default markers). Use these for anything amenity- or map-related — they match the hand-drawn illustration style.
-2. **`lucide-react`** — generic UI icons, used sparingly: `Volume2` (noise attribute, `CafeDetail.tsx`), `X` (toast dismiss, `Toast.tsx`). Reach for lucide only when there's no matching custom illustration and the icon is UI-chrome, not domain content.
+2. **`lucide-react`** — generic UI icons, used sparingly: `Volume2` (noise attribute, `CafeDetail.tsx`), `X` (toast dismiss, `Toast.tsx`), `Share2` (share button, `ShareButton.tsx`). Reach for lucide only when there's no matching custom illustration and the icon is UI-chrome, not domain content.
 
 ---
 
