@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import posthog from 'posthog-js'
 import type { Cafe, FilterState } from '@/types'
 import { useFilters } from '@/hooks/useFilters'
 import MapContainer from '@/components/map/MapContainer'
@@ -9,6 +11,7 @@ import FilterBar from '@/components/filters/FilterBar'
 import CafeCard from '@/components/cafe/CafeCard'
 import Button from '@/components/ui/Button'
 import ShareButton from '@/components/ui/ShareButton'
+import ShareLandingTracker from '@/components/ui/ShareLandingTracker'
 import WatercolorSurface from '@/components/ui/WatercolorSurface'
 import styles from './HomeClient.module.css'
 
@@ -17,6 +20,7 @@ interface HomeClientProps {
 }
 
 export default function HomeClient({ initialCafes }: HomeClientProps) {
+  const pathname = usePathname()
   const { filters, setFilters, filteredCafes, resetFilters } = useFilters(initialCafes)
   const [mobileView, setMobileView]       = useState<'map' | 'list'>('map')
   const [listCollapsed, setListCollapsed] = useState(false)
@@ -40,16 +44,26 @@ export default function HomeClient({ initialCafes }: HomeClientProps) {
 
   return (
     <div className={styles.root}>
+      <ShareLandingTracker />
+
       {/* Header */}
       <header className={styles.header}>
         <WatercolorSurface seed={1} />
-        <Link href="/" className={styles.logo}>
+        <Link
+          href="/"
+          className={styles.logo}
+          onClick={() => posthog.capture('logo_clicked', { from_page: pathname === '/' ? 'home' : pathname })}
+        >
           StudyBrew
           <img src="/icons/coffee_cup_transparent.png" alt="" className={styles.logoIcon} />
         </Link>
         <div className={styles.headerActions}>
           <ShareButton className={styles.shareBtn} />
-          <Link href="/add" className={styles.headerCta}>
+          <Link
+            href="/add"
+            className={styles.headerCta}
+            onClick={() => posthog.capture('add_cafe_started', { source: 'header' })}
+          >
             <Button variant="accent" size="sm" className={styles.addCafeBtn}>
               Add a café
             </Button>
@@ -113,7 +127,11 @@ export default function HomeClient({ initialCafes }: HomeClientProps) {
         <Button
           variant="primary"
           size="sm"
-          onClick={() => setMobileView(mobileView === 'map' ? 'list' : 'map')}
+          onClick={() => {
+            const next = mobileView === 'map' ? 'list' : 'map'
+            posthog.capture('view_toggled', { to_view: next })
+            setMobileView(next)
+          }}
         >
           {mobileView === 'map' ? `List (${cafeCount})` : 'Map'}
         </Button>

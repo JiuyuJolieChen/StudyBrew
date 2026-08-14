@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import posthog from 'posthog-js'
 import type { Cafe } from '@/types'
 import { WIFI_LABELS, OUTLETS_LABELS, DESK_SIZE_LABELS, SEATS_LABELS, AMENITY_ICONS } from '@/lib/constants'
 import { getTodayHoursLabel } from '@/lib/hours'
@@ -19,6 +20,7 @@ export default function CafePopcard({ cafe }: Props) {
   async function handleCopy() {
     try {
       await navigator.clipboard.writeText(cafe.address)
+      posthog.capture('copy_address', { cafe_id: cafe.id, source: 'map_popup' })
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch { /* ignore — clipboard API unavailable */ }
@@ -52,7 +54,11 @@ export default function CafePopcard({ cafe }: Props) {
         <p className={styles.time}>{getTodayHoursLabel(cafe.hours)}</p>
         <p className={styles.address}>{cafe.address}</p>
         <div className={styles.actions}>
-          <Link href={`/cafe/${cafe.id}`} className={styles.actionLink}>
+          <Link
+            href={`/cafe/${cafe.id}`}
+            className={styles.actionLink}
+            onClick={() => posthog.capture('cafe_detail_viewed', { cafe_id: cafe.id, source: 'map_pin' })}
+          >
             <Button variant="secondary" size="sm" className={styles.actionBtn}>View details</Button>
           </Link>
           <Button variant="secondary" size="sm" className={styles.actionBtn} onClick={handleCopy}>

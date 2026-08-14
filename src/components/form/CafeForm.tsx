@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import posthog from 'posthog-js'
 import type { Cafe, GeoResult, HoursJson, BoroughEnum, WifiEnum, OutletsEnum, DeskSizeEnum, SeatsEnum, NoiseEnum } from '@/types'
 import {
   BOROUGH_LABELS,
@@ -77,6 +78,8 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
       setToast({ message: 'Please fill in all required fields.', type: 'error' }); return
     }
 
+    const isEdit = Boolean(editId)
+
     setSubmitting(true)
     const payload = {
       ...form,
@@ -88,10 +91,17 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
     const url    = editId ? `/api/cafes/${editId}` : '/api/cafes'
     const method = editId ? 'PATCH' : 'POST'
 
+    const filledFieldCount = Object.entries(form)
+      .filter(([k, v]) => k !== 'honeypot' && v !== '' && v !== 0 && v !== null).length
+    posthog.capture('add_cafe_submit_attempted', { filled_field_count: filledFieldCount, is_edit: isEdit })
+
     try {
       const r = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-ph-distinct-id': posthog.get_distinct_id(),
+        },
         body: JSON.stringify(payload),
       })
       const data = await r.json()
@@ -99,8 +109,10 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
         const msg = data.issues
           ? data.issues.map((i: { message: string }) => i.message).join('; ')
           : (data.error ?? 'Something went wrong.')
+        posthog.capture('add_cafe_submit_failed', { error_type: data.error ?? 'validation_error', is_edit: isEdit })
         throw new Error(msg)
       }
+      posthog.capture('add_cafe_submit_succeeded', { cafe_id: data.data.id, is_edit: isEdit })
       setToast({ message: editId ? 'Café updated!' : 'Café added! Thank you.', type: 'success' })
       setTimeout(() => router.push('/'), 1500)
     } catch (err) {

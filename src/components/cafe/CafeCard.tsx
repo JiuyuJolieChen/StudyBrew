@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import posthog from 'posthog-js'
 import { Cafe } from '@/types'
 import { BOROUGH_LABELS, WIFI_LABELS, OUTLETS_LABELS, DESK_SIZE_LABELS, SEATS_LABELS, AMENITY_ICONS } from '@/lib/constants'
 import WatercolorSurface from '@/components/ui/WatercolorSurface'
@@ -25,6 +26,7 @@ export default function CafeCard({ cafe, onClick }: CafeCardProps) {
     e.stopPropagation()
     try {
       await navigator.clipboard.writeText(cafe.address)
+      posthog.capture('copy_address', { cafe_id: cafe.id, source: 'list_card' })
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch { /* ignore */ }
@@ -88,7 +90,10 @@ export default function CafeCard({ cafe, onClick }: CafeCardProps) {
           <Link
             href={`/cafe/${cafe.id}`}
             className={styles['view-details']}
-            onClick={e => e.stopPropagation()}
+            onClick={e => {
+              e.stopPropagation()
+              posthog.capture('cafe_detail_viewed', { cafe_id: cafe.id, source: 'list_card' })
+            }}
           >
             View details →
           </Link>

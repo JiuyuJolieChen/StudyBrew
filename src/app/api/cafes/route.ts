@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseServer } from '@/lib/supabase/server'
+import { getPostHogServer } from '@/lib/posthog-server'
 import { CafeCreateSchema } from '@/lib/validation/cafe'
 import type { BoroughEnum, WifiEnum } from '@/types'
 
@@ -68,6 +69,12 @@ export async function POST(request: NextRequest) {
   if (insertError) return NextResponse.json({ error: insertError.message }, { status: 500 })
 
   await db.from('cafe_edits').insert({ cafe_id: newCafe.id, changed_fields: insertPayload })
+
+  // Server-side capture — carry the request's distinct_id so this ties back to the same browser user
+  const ph = getPostHogServer()
+  const distinctId = request.headers.get('x-ph-distinct-id') ?? newCafe.id
+  ph.capture({ distinctId, event: 'cafe_added_server', properties: { cafe_id: newCafe.id } })
+  await ph.flush()
 
   return NextResponse.json({ data: newCafe }, { status: 201 })
 }

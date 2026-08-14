@@ -1,5 +1,6 @@
 'use client'
 import { useRef, useEffect } from 'react'
+import posthog from 'posthog-js'
 import { useAddressSearch } from '@/hooks/useAddressSearch'
 import Spinner from '@/components/ui/Spinner'
 import type { GeoResult } from '@/types'
@@ -32,6 +33,7 @@ export default function AddressSearch({ onSelect, defaultValue }: Props) {
   }, [setResults])
 
   function handleSelect(result: GeoResult) {
+    posthog.capture('add_cafe_address_selected')
     setQuery(result.display_name)
     setResults([])
     onSelect(result)

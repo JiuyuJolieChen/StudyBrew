@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
+import posthog from 'posthog-js'
 import type { FilterState, BoroughEnum, OutletsEnum, DeskSizeEnum, SeatsEnum, NoiseEnum } from '@/types'
 import {
   BOROUGH_LABELS,
@@ -117,6 +118,7 @@ export default function FilterBar({ filters, onChange }: FilterBarProps) {
     const next = current.includes(value)
       ? current.filter(v => v !== value)
       : [...current, value]
+    posthog.capture('filter_applied', { filter_type: key, filter_value: value })
     onChange({ ...filters, [key]: next as FilterState[K] })
   }
 
@@ -130,6 +132,7 @@ export default function FilterBar({ filters, onChange }: FilterBarProps) {
     const next = isOn
       ? filters.wifi.filter(v => !group.values.includes(v))
       : [...filters.wifi, ...group.values.filter(v => !filters.wifi.includes(v))]
+    posthog.capture('filter_applied', { filter_type: 'wifi', filter_value: key })
     onChange({ ...filters, wifi: next })
   }
 

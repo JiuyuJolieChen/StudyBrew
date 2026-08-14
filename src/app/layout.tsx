@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import WatercolorDefs from '@/components/ui/WatercolorDefs'
+import { PHProvider } from './providers'
+import PostHogPageView from './PostHogPageView'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -15,8 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <WatercolorDefs />
-        {children}
+        <PHProvider>
+          <PostHogPageView />
+          <WatercolorDefs />
+          {children}
+        </PHProvider>
       </body>
     </html>
   )

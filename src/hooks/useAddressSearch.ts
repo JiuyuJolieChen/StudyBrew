@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import posthog from 'posthog-js'
 import type { GeoResult } from '@/types'
 
 export function useAddressSearch() {
@@ -16,7 +17,9 @@ export function useAddressSearch() {
       try {
         const r = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`)
         const data = await r.json()
-        setResults(Array.isArray(data) ? data : [])
+        const results = Array.isArray(data) ? data : []
+        setResults(results)
+        posthog.capture('add_cafe_address_searched', { has_results: results.length > 0 })
       } catch {
         setResults([])
       } finally {

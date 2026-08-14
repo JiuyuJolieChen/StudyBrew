@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Share2 } from 'lucide-react'
+import posthog from 'posthog-js'
 import Button from './Button'
 import Toast from './Toast'
 
@@ -13,6 +14,7 @@ export default function ShareButton({ className }: { className?: string }) {
       const url = new URL(window.location.href)
       url.searchParams.set('ref', 'share')
       await navigator.clipboard.writeText(url.toString())
+      posthog.capture('share_button_clicked', { share_method: 'copy_link' })
       setShowToast(true)
     } catch {
       /* ignore — clipboard API unavailable */

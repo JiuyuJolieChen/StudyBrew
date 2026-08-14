@@ -31,7 +31,7 @@ export default function CafeDetail({ cafe }: CafeDetailProps) {
         {/* Header section */}
         <div className={styles['detail-section']}>
           <h1 className={styles['detail-title']}>{cafe.name}</h1>
-          <CopyAddress address={cafe.address} className={styles['detail-address']} />
+          <CopyAddress address={cafe.address} cafeId={cafe.id} className={styles['detail-address']} />
           <p className={styles['detail-neighborhood']}>
             {BOROUGH_LABELS[cafe.borough]}
             {cafe.neighborhood ? ` · ${cafe.neighborhood}` : ''}
