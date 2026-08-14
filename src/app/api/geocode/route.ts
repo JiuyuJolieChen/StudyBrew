@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { inferBorough, inferNeighborhood } from '@/lib/geocoding'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 import type { GeoResult } from '@/types'
 
 export async function GET(request: NextRequest) {
+  const ip = getClientIp(request)
+  if (!checkRateLimit(`geocode:${ip}`, 20, 60 * 1000)) {
+    return NextResponse.json({ error: 'rate_limited' }, { status: 429 })
+  }
+
   const q = new URL(request.url).searchParams.get('q')
   if (!q || q.trim().length < 2) {
     return NextResponse.json([], { status: 200 })
