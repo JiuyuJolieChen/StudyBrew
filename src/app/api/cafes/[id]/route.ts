@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseServer } from '@/lib/supabase/server'
+import { verifyTurnstile } from '@/lib/turnstile'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 import { CafePatchSchema } from '@/lib/validation/cafe'
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -24,6 +26,11 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   if (!UUID_RE.test(params.id)) {
     return NextResponse.json({ error: 'invalid_id' }, { status: 400 })
+  }
+
+  const ip = getClientIp(request)
+  if (!checkRateLimit(`cafes:patch:${ip}`, 10, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: 'rate_limited' }, { status: 429 })
   }
 
   const db = getSupabaseServer()
@@ -52,7 +59,12 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     return NextResponse.json({})
   }
 
-  const { honeypot: _, ...patchFields } = data
+  const captchaOk = await verifyTurnstile(data.turnstile_token, ip)
+  if (!captchaOk) {
+    return NextResponse.json({ error: 'captcha_failed' }, { status: 400 })
+  }
+
+  const { turnstile_token: _token, honeypot: _honeypot, ...patchFields } = data
 
   // Compute changed_fields diff
   const changedFields: Record<string, unknown> = {}

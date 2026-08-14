@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import WatercolorDefs from '@/components/ui/WatercolorDefs'
 import { PHProvider } from './providers'
 import PostHogPageView from './PostHogPageView'
@@ -22,6 +23,10 @@ export default function RootLayout({
           <WatercolorDefs />
           {children}
         </PHProvider>
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   )

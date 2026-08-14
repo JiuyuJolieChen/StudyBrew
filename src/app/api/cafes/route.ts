@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import { getPostHogServer } from '@/lib/posthog-server'
+import { verifyTurnstile } from '@/lib/turnstile'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 import { CafeCreateSchema } from '@/lib/validation/cafe'
 import type { BoroughEnum, WifiEnum } from '@/types'
 
@@ -20,6 +22,11 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request)
+  if (!checkRateLimit(`cafes:post:${ip}`, 5, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: 'rate_limited' }, { status: 429 })
+  }
+
   let body: unknown
   try { body = await request.json() } catch {
     return NextResponse.json({ error: 'invalid_json' }, { status: 400 })
@@ -37,7 +44,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({})
   }
 
-  const { honeypot: _, ...insertPayload } = data
+  const captchaOk = await verifyTurnstile(data.turnstile_token, ip)
+  if (!captchaOk) {
+    return NextResponse.json({ error: 'captcha_failed' }, { status: 400 })
+  }
+
+  const { turnstile_token: _token, honeypot: _honeypot, ...insertPayload } = data
 
   const db = getSupabaseServer()
 

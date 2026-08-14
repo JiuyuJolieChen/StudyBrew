@@ -19,6 +19,7 @@ import Button from '@/components/ui/Button'
 import Toast from '@/components/ui/Toast'
 import AddressSearch from './AddressSearch'
 import HoursPicker from './HoursPicker'
+import TurnstileWidget from './TurnstileWidget'
 import styles from './CafeForm.module.css'
 
 interface CafeFormProps {
@@ -49,6 +50,7 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
     hours:        (initialData?.hours ?? null) as HoursJson,
     honeypot:     '',
   })
+  const [token, setToken]           = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [toast, setToast]           = useState<{ message: string; type: 'success' | 'error' } | null>(null)
 
@@ -77,15 +79,19 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
     if (!form.borough || !form.wifi || !form.outlets || !form.desk_size) {
       setToast({ message: 'Please fill in all required fields.', type: 'error' }); return
     }
+    if (!token) {
+      setToast({ message: 'Please complete the CAPTCHA.', type: 'error' }); return
+    }
 
     const isEdit = Boolean(editId)
 
     setSubmitting(true)
     const payload = {
       ...form,
-      neighborhood: form.neighborhood || null,
-      seats:        form.seats || null,
-      noise:        form.noise || null,
+      neighborhood:    form.neighborhood || null,
+      seats:           form.seats || null,
+      noise:           form.noise || null,
+      turnstile_token: token,
     }
 
     const url    = editId ? `/api/cafes/${editId}` : '/api/cafes'
@@ -106,9 +112,13 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
       })
       const data = await r.json()
       if (!r.ok) {
+        const ERROR_MESSAGES: Record<string, string> = {
+          captcha_failed: 'CAPTCHA verification failed — please try again.',
+          rate_limited:   "You're submitting too quickly — please wait a bit and try again.",
+        }
         const msg = data.issues
           ? data.issues.map((i: { message: string }) => i.message).join('; ')
-          : (data.error ?? 'Something went wrong.')
+          : (ERROR_MESSAGES[data.error] ?? data.error ?? 'Something went wrong.')
         posthog.capture('add_cafe_submit_failed', { error_type: data.error ?? 'validation_error', is_edit: isEdit })
         throw new Error(msg)
       }
@@ -117,6 +127,7 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
       setTimeout(() => router.push('/'), 1500)
     } catch (err) {
       setToast({ message: err instanceof Error ? err.message : 'Submission failed.', type: 'error' })
+      setToken('') // token is single-use / may have failed verification — force re-verify on retry
     } finally {
       setSubmitting(false)
     }
@@ -237,6 +248,10 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
 
         {/* Submit */}
         <div className={styles.submitRow}>
+          <TurnstileWidget
+            onVerify={setToken}
+            onExpire={() => setToken('')}
+          />
           <div className={styles.actions}>
             <Button type="submit" loading={submitting}>
               {editId ? 'Save changes' : 'Add café'}
