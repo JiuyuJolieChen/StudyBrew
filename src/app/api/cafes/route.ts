@@ -6,13 +6,17 @@ import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 import { CafeCreateSchema } from '@/lib/validation/cafe'
 import type { BoroughEnum, WifiEnum } from '@/types'
 
+// Safety cap — the map renders every result at once, so this isn't pagination,
+// just a ceiling to stop a single request from pulling an unbounded table.
+const MAX_RESULTS = 2000
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const borough = searchParams.get('borough') as BoroughEnum | null
   const wifi    = searchParams.get('wifi') as WifiEnum | null
 
   const db = getSupabaseServer()
-  let query = db.from('cafes').select('*').eq('is_deleted', false).order('created_at', { ascending: false })
+  let query = db.from('cafes').select('*').eq('is_deleted', false).order('created_at', { ascending: false }).limit(MAX_RESULTS)
   if (borough) query = query.eq('borough', borough)
   if (wifi)    query = query.eq('wifi', wifi)
 

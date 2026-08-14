@@ -11,6 +11,7 @@ export default async function HomePage() {
     .select('*')
     .eq('is_deleted', false)
     .order('created_at', { ascending: false })
+    .limit(2000)
 
   return <HomeClient initialCafes={(data as Cafe[]) ?? []} />
 }
