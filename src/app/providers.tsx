@@ -16,6 +16,13 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
       // lose almost all anonymous visitors.
       person_profiles: 'always',
     })
+
+    // npm-imported posthog-js doesn't attach itself to `window` the way the
+    // classic <script> snippet does — expose it so `posthog.debug()` works
+    // from the browser console, and so PostHog's in-app Toolbar can find it.
+    if (typeof window !== 'undefined') {
+      ;(window as unknown as { posthog: typeof posthog }).posthog = posthog
+    }
   }, [])
 
   return <PostHogProvider client={posthog}>{children}</PostHogProvider>

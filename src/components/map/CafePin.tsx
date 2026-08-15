@@ -1,6 +1,7 @@
 'use client'
 import { Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
+import posthog from 'posthog-js'
 import type { Cafe } from '@/types'
 import CafePopcard from '@/components/cafe/CafePopcard'
 
@@ -27,7 +28,10 @@ export default function CafePin({ cafe, onClick }: Props) {
     <Marker
       position={[cafe.lat, cafe.lng]}
       icon={cupIcon}
-      eventHandlers={{ click: () => onClick?.(cafe) }}
+      eventHandlers={{ click: () => {
+        posthog.capture('cafe_pin_clicked', { cafe_id: cafe.id })
+        onClick?.(cafe)
+      } }}
     >
       <Popup>
         <CafePopcard cafe={cafe} />

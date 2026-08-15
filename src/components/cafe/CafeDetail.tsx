@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import { Cafe } from '@/types'
 import CopyAddress from './CopyAddress'
+import EditCafeLink from './EditCafeLink'
 import {
   BOROUGH_LABELS,
   WIFI_FORM_LABELS,
@@ -92,12 +92,7 @@ export default function CafeDetail({ cafe }: CafeDetailProps) {
 
         {/* Edit link */}
         <div>
-          <Link
-            href={`/add?edit=${cafe.id}`}
-            className={styles['detail-edit-link']}
-          >
-            Edit this listing
-          </Link>
+          <EditCafeLink cafeId={cafe.id} className={styles['detail-edit-link']} />
         </div>
       </div>
     </div>

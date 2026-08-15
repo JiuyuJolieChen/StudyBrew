@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import posthog from 'posthog-js'
 import type { Cafe, GeoResult, HoursJson, BoroughEnum, WifiEnum, OutletsEnum, DeskSizeEnum, SeatsEnum, NoiseEnum } from '@/types'
@@ -57,6 +57,11 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
   function set<K extends keyof typeof form>(key: K, value: typeof form[K]) {
     setForm(f => ({ ...f, [key]: value }))
   }
+
+  // Stable identity — TurnstileWidget's mount effect depends on this callback,
+  // so an inline arrow function here would re-render → remount the widget →
+  // force a fresh CAPTCHA challenge on every keystroke in the form.
+  const handleTurnstileExpire = useCallback(() => setToken(''), [])
 
   function handleAddressSelect(result: GeoResult) {
     setForm(f => ({
@@ -250,7 +255,7 @@ export default function CafeForm({ initialData, editId }: CafeFormProps) {
         <div className={styles.submitRow}>
           <TurnstileWidget
             onVerify={setToken}
-            onExpire={() => setToken('')}
+            onExpire={handleTurnstileExpire}
           />
           <div className={styles.actions}>
             <Button type="submit" loading={submitting}>

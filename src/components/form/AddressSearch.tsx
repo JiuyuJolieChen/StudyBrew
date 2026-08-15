@@ -12,14 +12,8 @@ interface Props {
 }
 
 export default function AddressSearch({ onSelect, defaultValue }: Props) {
-  const { query, setQuery, results, setResults, isLoading } = useAddressSearch()
+  const { query, setQuery, results, setResults, isLoading } = useAddressSearch(defaultValue)
   const wrapperRef = useRef<HTMLDivElement>(null)
-
-  // Initialize query from defaultValue only once
-  useEffect(() => {
-    if (defaultValue) setQuery(defaultValue)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   // Close dropdown when clicking outside
   useEffect(() => {
