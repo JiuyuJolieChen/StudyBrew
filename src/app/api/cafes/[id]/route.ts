@@ -29,7 +29,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   }
 
   const ip = getClientIp(request)
-  if (!checkRateLimit(`cafes:patch:${ip}`, 10, 10 * 60 * 1000)) {
+  if (!checkRateLimit(`cafes:patch:${ip}`, 30, 10 * 60 * 1000)) {
     return NextResponse.json({ error: 'rate_limited' }, { status: 429 })
   }
 

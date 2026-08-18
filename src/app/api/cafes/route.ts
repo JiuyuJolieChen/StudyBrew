@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request)
-  if (!checkRateLimit(`cafes:post:${ip}`, 5, 10 * 60 * 1000)) {
+  if (!checkRateLimit(`cafes:post:${ip}`, 30, 10 * 60 * 1000)) {
     return NextResponse.json({ error: 'rate_limited' }, { status: 429 })
   }
 
